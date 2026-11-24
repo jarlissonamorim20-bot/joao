@@ -1,0 +1,2360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#009ee3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#080f18" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bomba Denisio">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Bomba Denisio · Painel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --brand:#009ee3; --brand-600:#0086c6; --brand-700:#00679b; --brand-50:#e8f6fd;
+    --grad-brand:linear-gradient(135deg,#0089c9 0%,#009ee3 46%,#35bdf4 100%);
+    --pos:#00a862; --pos-bg:#e6f7ef; --pos-ink:#00794a;
+    --warn:#f59e0b; --warn-bg:#fff4e2; --warn-ink:#9a5b00;
+    --neg:#ef4444;  --neg-bg:#fdecec;  --neg-ink:#b91c1c;
+    --attn-bg:#fff2dd; --attn-ink:#94540a;
+    --bg:#f4f7fb; --surface:#fff; --surface-2:#f1f5f9; --surface-3:#e9eff6;
+    --ink:#0b1b2b; --ink-2:#4a5d71; --ink-3:#7d8ea0; --line:#e5ebf2;
+    --side-bg:#0b2233; --side-ink:#b9cddd;
+    --r-sm:10px; --r:14px; --r-lg:18px; --r-xl:24px;
+    --sh-1:0 1px 2px rgba(11,27,43,.06);
+    --sh-2:0 2px 6px rgba(11,27,43,.06),0 8px 24px rgba(11,27,43,.06);
+    --sh-3:0 12px 32px rgba(11,27,43,.14);
+    --sh-brand:0 10px 30px rgba(0,120,175,.32);
+    --side:272px; --tabbar:68px;
+    --ease:cubic-bezier(.32,.72,0,1);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --brand-50:rgba(0,158,227,.16);
+      --pos-bg:rgba(0,168,98,.16); --pos-ink:#4ade9b;
+      --warn-bg:rgba(245,158,11,.16); --warn-ink:#fbbf4d;
+      --neg-bg:rgba(239,68,68,.16); --neg-ink:#ff8b8b;
+      --attn-bg:rgba(245,158,11,.14); --attn-ink:#fcc35c;
+      --bg:#080f18; --surface:#0f1c2a; --surface-2:#142434; --surface-3:#1a2d40;
+      --ink:#e9f1f9; --ink-2:#a3b6c9; --ink-3:#74889c; --line:#1d3145;
+      --side-bg:#0a1725;
+      --sh-1:0 1px 2px rgba(0,0,0,.4);
+      --sh-2:0 2px 8px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.35);
+      --sh-3:0 16px 40px rgba(0,0,0,.55);
+      --sh-brand:0 10px 30px rgba(0,0,0,.45);
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    font-feature-settings:"cv05","ss01";
+    overscroll-behavior-y:none;
+  }
+  button,input,select,textarea{font:inherit;color:inherit}
+  button{-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none!important}
+  h1,h2,h3{letter-spacing:-.015em;margin:0}
+  ::selection{background:var(--brand);color:#fff}
+  .num{font-variant-numeric:tabular-nums}
+  .boot{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:200}
+  .spinner{width:36px;height:36px;border-radius:50%;border:3px solid var(--brand-50);border-top-color:var(--brand);animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .login{min-height:100dvh;display:grid;place-items:center;padding:24px 18px;position:relative;overflow:hidden;
+    background:radial-gradient(120% 80% at 50% -10%, rgba(0,158,227,.22), transparent 60%),var(--bg)}
+  .login-card{width:100%;max-width:390px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);
+    box-shadow:var(--sh-2);padding:32px 26px 28px;animation:rise .5s var(--ease) both}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}}
+  .login-title{font-size:23px;margin:22px 0 4px;font-weight:700}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:17px;letter-spacing:-.02em}
+  .brand-mark{width:38px;height:38px;border-radius:12px;background:var(--grad-brand);display:grid;place-items:center;flex:none;box-shadow:var(--sh-brand)}
+  .brand.light{color:#fff}
+  .field{display:flex;flex-direction:column;gap:7px;margin-top:16px}
+  .field label{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .input{height:50px;width:100%;border:1.5px solid var(--line);border-radius:var(--r);padding:0 15px;background:var(--surface);
+    outline:none;transition:border-color .16s,box-shadow .16s,background .16s;color:var(--ink)}
+  .input::placeholder{color:var(--ink-3)}
+  .input:hover{border-color:#cfdbe7}
+  .input:focus{border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-50)}
+  select.input{appearance:none;cursor:pointer;
+    background-image:linear-gradient(45deg,transparent 50%,var(--ink-3) 50%),linear-gradient(135deg,var(--ink-3) 50%,transparent 50%);
+    background-position:calc(100% - 19px) 52%,calc(100% - 14px) 52%;background-size:5px 5px;background-repeat:no-repeat;padding-right:38px}
+  .pass{position:relative}
+  .pass .input{padding-right:88px}
+  .pass-btn{position:absolute;right:7px;top:50%;transform:translateY(-50%);border:0;background:var(--surface-2);color:var(--brand-700);
+    font-size:12.5px;font-weight:700;padding:9px 12px;cursor:pointer;border-radius:10px}
+  .check{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-2);margin:18px 0 20px;cursor:pointer}
+  .check input{width:19px;height:19px;accent-color:var(--brand)}
+  .form-erro{background:var(--neg-bg);color:var(--neg-ink);padding:11px 13px;border-radius:var(--r);font-size:13.5px;margin:14px 0 0;font-weight:500}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:0 20px;border-radius:var(--r);
+    border:1.5px solid transparent;font-weight:650;font-size:15px;cursor:pointer;white-space:nowrap;
+    transition:transform .12s var(--ease),filter .16s,background .16s,box-shadow .16s}
+  .btn:active:not(:disabled){transform:scale(.975)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn-primary{background:var(--grad-brand);color:#fff;box-shadow:var(--sh-brand)}
+  .btn-primary:hover:not(:disabled){filter:brightness(1.06)}
+  .btn-success{background:linear-gradient(135deg,#009257,#00bd72);color:#fff;box-shadow:0 10px 26px rgba(0,150,90,.3)}
+  .btn-danger{background:linear-gradient(135deg,#e03b3b,#ff5f5f);color:#fff;box-shadow:0 10px 26px rgba(220,60,60,.28)}
+  .btn-warn{background:linear-gradient(135deg,#e08600,#f7a726);color:#fff;box-shadow:0 10px 26px rgba(220,140,0,.28)}
+  .btn-ghost{background:var(--surface);border-color:var(--line);color:var(--ink)}
+  .btn-ghost:hover:not(:disabled){background:var(--surface-2)}
+  .btn-block{width:100%}
+  .btn-sm{min-height:40px;padding:0 14px;font-size:13.5px;border-radius:11px;box-shadow:none}
+  .btn-side{background:rgba(255,255,255,.1);color:#fff;min-height:42px;border-radius:12px}
+  .btn-side:hover{background:rgba(255,255,255,.18)}
+  .icon-btn{width:42px;height:42px;border-radius:13px;border:0;background:transparent;font-size:19px;cursor:pointer;
+    display:grid;place-items:center;flex:none;transition:background .16s,transform .12s}
+  .icon-btn:hover{background:var(--surface-2)}
+  .icon-btn:active{transform:scale(.93)}
+  .link{border:0;background:none;color:var(--brand-700);font-weight:650;font-size:13.5px;cursor:pointer;padding:5px 0}
+  @media (prefers-color-scheme: dark){ .link{color:#5cc6f5} }
+  .sidebar{position:fixed;inset:0 auto 0 0;width:var(--side);max-width:86vw;background:var(--side-bg);color:var(--side-ink);
+    display:flex;flex-direction:column;z-index:60;transform:translateX(-100%);transition:transform .32s var(--ease)}
+  body.menu-open .sidebar{transform:none;box-shadow:10px 0 40px rgba(0,0,0,.3)}
+  .overlay{position:fixed;inset:0;background:rgba(6,16,26,.55);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .3s;z-index:55}
+  body.menu-open .overlay{opacity:1;pointer-events:auto}
+  body.menu-open,body.sheet-open{overflow:hidden}
+  .side-head{display:flex;align-items:center;justify-content:space-between;height:72px;padding:0 14px 0 22px}
+  .close-btn{color:var(--side-ink)}
+  .close-btn:hover{background:rgba(255,255,255,.1)}
+  .nav{padding:6px 12px;display:grid;gap:3px;align-content:start;overflow-y:auto;flex:1}
+  .nav-item{display:flex;align-items:center;gap:13px;width:100%;padding:12px 13px;border:0;border-radius:13px;background:transparent;
+    color:var(--side-ink);font-size:14.5px;font-weight:500;cursor:pointer;text-align:left;transition:background .16s,color .16s}
+  .nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
+  .nav-item.active{background:linear-gradient(90deg,rgba(0,158,227,.32),rgba(0,158,227,.12));color:#fff;font-weight:650;box-shadow:inset 3px 0 0 var(--brand)}
+  .ni{width:22px;text-align:center;font-size:16px}
+  .nav-badge{margin-left:auto;background:var(--warn);color:#fff;border-radius:999px;font-size:11.5px;font-weight:800;padding:2px 8px}
+  .side-foot{padding:14px 16px calc(16px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.1);display:grid;gap:11px}
+  .user{display:flex;align-items:center;gap:11px;min-width:0}
+  .avatar{width:36px;height:36px;border-radius:50%;background:var(--grad-brand);color:#fff;display:grid;place-items:center;
+    font-weight:700;flex:none;text-transform:uppercase;font-size:15px}
+  .user-email{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#dce8f3}
+  .main{min-height:100dvh;display:flex;flex-direction:column}
+  .topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:8px;height:62px;padding:0 10px;
+    background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(180%) blur(14px);
+    -webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+  .topbar h1{font-size:17.5px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
+  .topo-marca{width:34px;height:34px;border-radius:11px;background:var(--grad-brand);display:grid;place-items:center;flex:none;margin-left:6px}
+  @media(min-width:1024px){ .topo-marca{display:none} }
+  .content{padding:16px 16px calc(var(--tabbar) + 28px + env(safe-area-inset-bottom));max-width:1180px;width:100%;margin:0 auto}
+  .page{animation:pagina .34s var(--ease) both}
+  @keyframes pagina{from{opacity:0;transform:translateY(10px)}}
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;
+    align-items:stretch;height:calc(var(--tabbar) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);
+    background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:saturate(180%) blur(18px);
+    -webkit-backdrop-filter:saturate(180%) blur(18px);border-top:1px solid var(--line)}
+  .tab{position:relative;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    color:var(--ink-3);font-size:10.5px;font-weight:600;cursor:pointer;padding-top:6px;transition:color .18s}
+  .tab .ti{font-size:20px;line-height:1;transition:transform .22s var(--ease)}
+  .tab.active{color:var(--brand)}
+  .tab.active .ti{transform:translateY(-2px) scale(1.06)}
+  .tab.active::before{content:"";position:absolute;top:0;width:28px;height:3px;border-radius:0 0 4px 4px;background:var(--brand)}
+  .tab-badge{position:absolute;top:4px;right:calc(50% - 20px);min-width:17px;height:17px;padding:0 4px;border-radius:999px;
+    background:var(--warn);color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center}
+  @media(min-width:1024px){
+    .sidebar{transform:none;max-width:none}
+    body.menu-open .sidebar{box-shadow:none}
+    .main{margin-left:var(--side)}
+    .menu-btn,.close-btn,.overlay,.tabbar{display:none}
+    body.menu-open{overflow:auto}
+    .topbar{padding:0 28px;height:70px}
+    .content{padding:26px 28px 56px}
+  }
+  .pill{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font-size:12.5px;font-weight:650;white-space:nowrap}
+  .pill .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+  .pill.on{background:var(--pos-bg);color:var(--pos-ink)}
+  .pill.on .dot{animation:pulse 2.4s infinite}
+  .pill.off{background:var(--neg-bg);color:var(--neg-ink)}
+  .pill.wait{background:var(--surface-2);color:var(--ink-3)}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,168,98,.5)}70%{box-shadow:0 0 0 8px rgba(0,168,98,0)}100%{box-shadow:0 0 0 0 rgba(0,168,98,0)}}
+  .banner{display:flex;gap:11px;align-items:center;padding:14px 16px;border-radius:var(--r-lg);font-size:14px;margin-bottom:16px;
+    text-align:left;font-weight:500;animation:pagina .3s var(--ease) both}
+  .banner.error{background:var(--neg-bg);color:var(--neg-ink)}
+  .banner.warn{background:var(--warn-bg);color:var(--warn-ink)}
+  .banner.attn{background:var(--attn-bg);color:var(--attn-ink)}
+  .banner.slim{border-radius:0;margin:0;justify-content:center;padding:10px 16px;font-size:13.5px}
+  .banner button{margin-left:auto;flex:none}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1);padding:18px;min-width:0;
+    transition:box-shadow .2s,transform .2s}
+  @media(min-width:1024px){ .card:hover{box-shadow:var(--sh-2)} }
+  .card h2{font-size:16px;font-weight:700}
+  .hint{color:var(--ink-3);font-size:13.5px;margin:4px 0 0}
+  .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .mt{margin-top:16px}.mt-s{margin-top:12px}
+  .center{text-align:center}
+  .note{font-size:12.5px;color:var(--ink-3);margin:14px 2px 0;line-height:1.5}
+  .mono{font-family:ui-monospace,SFMono-Regular,'SF Mono',Consolas,monospace;font-size:.92em;letter-spacing:-.02em}
+  .break{word-break:break-all}
+  .cash{position:relative;overflow:hidden;border:0;color:#fff;padding:22px;border-radius:var(--r-xl);
+    background:var(--grad-brand);box-shadow:var(--sh-brand)}
+  .cash::after{content:"";position:absolute;right:-70px;top:-90px;width:260px;height:260px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%)}
+  .cash::before{content:"";position:absolute;left:-40px;bottom:-110px;width:220px;height:220px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.12),transparent 65%)}
+  .cash-head{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:1}
+  .cash-head h2{font-size:14px;font-weight:600;opacity:.92;letter-spacing:.01em}
+  .eye{background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:999px;height:38px;padding:0 14px;display:inline-flex;gap:7px;
+    align-items:center;font-weight:650;font-size:13px;cursor:pointer;transition:background .16s,transform .12s}
+  .eye:hover{background:rgba(255,255,255,.32)}
+  .eye:active{transform:scale(.95)}
+  .cash-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 14px;margin-top:18px;position:relative;z-index:1}
+  .cash-hoje{grid-column:1/-1}
+  @media(min-width:768px){.cash-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.cash-hoje{grid-column:auto}}
+  .cash-l{font-size:12px;opacity:.86;font-weight:600;letter-spacing:.02em;text-transform:uppercase}
+  .cash-v{display:block;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    font-size:clamp(21px,6vw,27px);line-height:1.22;letter-spacing:-.02em;margin-top:2px}
+  .cash-hoje .cash-v{font-size:clamp(30px,10vw,40px)}
+  .cash-s{font-size:12px;opacity:.86}
+  .cash-foot{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.26);font-size:12.5px;opacity:.95;
+    display:flex;gap:18px;flex-wrap:wrap;position:relative;z-index:1}
+  .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  @media(min-width:768px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}}
+  .kpi{padding:15px 16px}
+  .kpi-label{font-size:12px;color:var(--ink-3);font-weight:650;letter-spacing:.01em}
+  .kpi-value{font-size:22px;font-weight:750;margin-top:7px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;
+    text-overflow:ellipsis;letter-spacing:-.02em}
+  .kpi-sub{font-size:12.5px;color:var(--ink-3);margin-top:3px;min-height:18px}
+  .kpi.good .kpi-value{color:var(--pos-ink)}
+  .kpi.bad .kpi-value{color:var(--neg-ink)}
+  .kpi.warn .kpi-value{color:var(--warn-ink)}
+  .two{display:grid;gap:16px}
+  @media(min-width:1024px){.two{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}}
+  .badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap;
+    background:var(--surface-2);color:var(--ink-2);letter-spacing:.01em}
+  .badge.success{background:var(--pos-bg);color:var(--pos-ink)}
+  .badge.warn{background:var(--warn-bg);color:var(--warn-ink)}
+  .badge.error{background:var(--neg-bg);color:var(--neg-ink)}
+  .badge.primary{background:var(--brand-50);color:var(--brand-700)}
+  .badge.attn{background:var(--attn-bg);color:var(--attn-ink)}
+  @media (prefers-color-scheme: dark){ .badge.primary{color:#5cc6f5} }
+  .list{list-style:none;margin:0;padding:0}
+  .row{display:flex;align-items:center;gap:13px;padding:13px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+  .row:first-child{border-top:0}
+  .row-main{flex:1;min-width:0}
+  .row-title{font-weight:650;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-.01em}
+  .row-meta{font-size:12.5px;color:var(--ink-3);margin-top:3px;overflow:hidden;text-overflow:ellipsis}
+  .row-end{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex:none}
+  .row-val{font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:15px;letter-spacing:-.01em}
+  .row-val.pos{color:var(--pos-ink)}
+  .row-val.neg{color:var(--warn-ink)}
+  .ic-circle,.ev-ic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;flex:none;font-size:18px;
+    background:var(--surface-2);color:var(--ink-2)}
+  .ic-circle.pos{background:var(--pos-bg)}
+  .ic-circle.warn{background:var(--warn-bg)}
+  .ic-circle.neg{background:var(--neg-bg)}
+  .ic-circle.primary{background:var(--brand-50)}
+  .ic-circle.attn{background:var(--attn-bg)}
+  .empty{padding:32px 14px;text-align:center;color:var(--ink-3);font-size:14px}
+  .ldot{width:9px;height:9px;border-radius:50%;flex:none;align-self:flex-start;margin-top:7px;background:var(--ink-3)}
+  .ldot.primary{background:var(--brand)}.ldot.warn{background:var(--warn)}.ldot.error{background:var(--neg)}.ldot.success{background:var(--pos)}
+  .clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:14px;word-break:break-word}
+  .log{cursor:pointer;border-radius:12px;transition:background .16s}
+  .log:hover{background:var(--surface-2)}
+  .log.open .clamp{display:block}
+  .tx{cursor:pointer;border-radius:12px;transition:background .16s}
+  .tx:hover{background:var(--surface-2)}
+  .det{flex-basis:100%;display:none;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px 18px;padding:14px 16px;
+    background:var(--surface-2);border-radius:var(--r);margin-top:8px;font-size:13px;animation:pagina .2s var(--ease) both}
+  .tx.open .det{display:grid}
+  .det div span{display:block;color:var(--ink-3);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+  .det div b{font-weight:650;word-break:break-word}
+  .det .acoes{grid-column:1/-1;display:flex;gap:9px;flex-wrap:wrap;margin-top:2px}
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:650;
+    cursor:pointer;color:var(--ink-2);transition:all .16s}
+  .chip:hover{border-color:var(--brand);color:var(--brand-700)}
+  .chip.active{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 4px 12px rgba(0,158,227,.3)}
+  .live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--pos);margin-right:7px;animation:pulse 2.4s infinite}
+  .chart{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+  .bar-col{display:flex;flex-direction:column;align-items:center}
+  .bar-area{height:156px;width:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px}
+  .bar-num{font-size:12px;font-weight:750;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .bar-stack{width:100%;max-width:38px;display:flex;flex-direction:column-reverse;border-radius:10px 10px 4px 4px;overflow:hidden;
+    background:var(--surface-2);transition:height .5s var(--ease)}
+  .bar-stack span{display:block;min-height:2px}
+  .bar-lbl{font-size:11px;color:var(--ink-3);text-align:center;margin-top:8px;text-transform:capitalize;line-height:1.3;font-weight:500}
+  .bar-lbl b{color:var(--ink);font-weight:700}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-3);font-weight:500}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:4px;margin-right:6px;vertical-align:-1px}
+  .mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  @media(min-width:768px){.mini-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .mini-l{display:block;font-size:11.5px;color:var(--ink-3);font-weight:650;text-transform:uppercase;letter-spacing:.03em}
+  .mini-v{display:block;font-weight:700;font-size:16.5px;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .orb{width:184px;height:184px;border-radius:50%;margin:10px auto 18px;position:relative;overflow:hidden;background:var(--surface-2);
+    border:7px solid var(--surface);box-shadow:0 0 0 1px var(--line),inset 0 3px 12px rgba(0,0,0,.07),var(--sh-2)}
+  .orb .water{position:absolute;left:-50%;width:200%;height:200%;top:100%;background:linear-gradient(180deg,#3fc3f5,#0089c9);
+    border-radius:42%;transition:top 1s var(--ease)}
+  .orb.on .water{top:28%;animation:wave 6s linear infinite}
+  @keyframes wave{to{transform:rotate(360deg)}}
+  .orb-label{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:1;color:var(--ink-3)}
+  #orb-main,#mg-orb-main{font-weight:750;font-size:21px;letter-spacing:-.02em}
+  .orb-sub{font-size:13px;font-weight:650;margin-top:3px;font-variant-numeric:tabular-nums}
+  .orb.on .orb-label{color:#fff;text-shadow:0 1px 8px rgba(0,60,90,.35)}
+  .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:18px}
+  .cmd-title{font-weight:750;margin:16px 0 14px;font-size:15px}
+  .steps{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+  .step{display:flex;align-items:center;gap:12px;color:var(--ink-3);font-size:14px;font-weight:500}
+  .step .ic{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px;
+    font-weight:800;flex:none}
+  .step.done{color:var(--ink)}
+  .step.done .ic{background:var(--pos);border-color:var(--pos);color:#fff}
+  .step.now{color:var(--ink)}
+  .step.now .ic{border-color:var(--brand);border-top-color:transparent;animation:spin .8s linear infinite}
+  .step.late .ic{border-color:var(--warn);border-top-color:transparent;animation:spin 1.2s linear infinite}
+  .step.fail{color:var(--neg-ink)}
+  .step.fail .ic{background:var(--neg);border-color:var(--neg);color:#fff}
+  .fb{font-size:13.5px;margin:12px 0 0;min-height:20px;font-weight:500}
+  .fb.pending{color:var(--ink-3)}.fb.ok{color:var(--pos-ink)}.fb.error{color:var(--neg-ink)}.fb.info{color:var(--warn-ink)}
+  .sum-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+  .sum{padding:14px 15px;display:flex;flex-direction:column;gap:2px}
+  .sum-l{font-size:11.5px;color:var(--ink-3);font-weight:650;text-transform:uppercase;letter-spacing:.03em}
+  .sum-v{font-size:22px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .sum-s{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .sum.s-ok .sum-v{color:var(--pos-ink)}.sum.s-warn .sum-v{color:var(--warn-ink)}
+  .filters{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .filters .search{grid-column:1/-1}
+  @media(min-width:768px){.filters{grid-template-columns:2fr 1fr 1fr}.filters .search{grid-column:auto}}
+  .list-head{font-size:12.5px;color:var(--ink-3);margin:16px 0 2px;font-weight:500}
+  .cfg-grid{display:grid;gap:16px}
+  @media(min-width:900px){.cfg-grid{grid-template-columns:1fr 1fr}.cfg-grid .span{grid-column:1/-1}}
+  .row-flex{display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .inline{display:flex;gap:11px;flex-wrap:wrap}
+  .inline>*:first-child{flex:1 1 170px}
+  .dinheiro{position:relative}
+  .dinheiro span{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-weight:650}
+  .dinheiro .input{padding-left:44px;font-variant-numeric:tabular-nums;font-weight:650}
+  .range-row{display:flex;gap:16px;align-items:center}
+  input[type=range]{flex:1;accent-color:var(--brand);min-width:0;height:28px}
+  .num-wrap{display:flex;align-items:center;gap:7px;flex:none;color:var(--ink-3);font-weight:650}
+  .input.num{width:96px;text-align:center;padding:0 8px;font-weight:700}
+  .switch{position:relative;width:54px;height:32px;flex:none}
+  .switch input{opacity:0;width:100%;height:100%;margin:0;position:absolute;cursor:pointer;z-index:1}
+  .switch .track{position:absolute;inset:0;background:var(--surface-3);border-radius:999px;transition:background .24s var(--ease)}
+  .switch .track::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;
+    box-shadow:0 2px 6px rgba(0,0,0,.25);transition:transform .24s var(--ease)}
+  .switch input:checked+.track{background:linear-gradient(135deg,#009257,#00bd72)}
+  .switch input:checked+.track::after{transform:translateX(22px)}
+  .switch input:focus-visible+.track{outline:3px solid var(--brand-50);outline-offset:3px}
+  .kv{display:flex;flex-direction:column;gap:5px;font-size:13.5px}
+  .kv>span:first-child{color:var(--ink-3);font-size:11.5px;font-weight:650;text-transform:uppercase;letter-spacing:.03em}
+  .regras{background:var(--surface-2);border-radius:var(--r);padding:14px 16px;font-size:13.5px;display:grid;gap:10px;list-style:none;margin:0}
+  .regras li{display:flex;gap:10px;align-items:flex-start;line-height:1.45}
+  .toggle-row{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+  .table-wrap{overflow-x:auto;margin:0 -18px;padding:0 18px;-webkit-overflow-scrolling:touch}
+  table.rel{width:100%;border-collapse:collapse;font-size:13px}
+  .rel th{text-align:left;font-size:11.5px;color:var(--ink-3);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);
+    white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
+  .rel td{padding:11px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .rel tbody tr:hover{background:var(--surface-2)}
+  .rel td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .exp-btns{display:grid;gap:11px;grid-template-columns:1fr}
+  @media(min-width:600px){.exp-btns{grid-template-columns:repeat(3,1fr)}}
+  .campo-2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .bell{position:relative}
+  .bell-count{position:absolute;top:3px;right:2px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;
+    background:var(--neg);color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center;line-height:1;
+    box-shadow:0 0 0 2px var(--bg)}
+  .np{position:fixed;z-index:80;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);
+    box-shadow:var(--sh-3);overflow:hidden}
+  .np{left:0;right:0;bottom:0;top:auto;max-height:82dvh;border-radius:var(--r-xl) var(--r-xl) 0 0;
+    padding-bottom:env(safe-area-inset-bottom);animation:subir .32s var(--ease) both}
+  @keyframes subir{from{transform:translateY(100%)}}
+  @media(min-width:1024px){
+    .np{left:auto;right:22px;top:76px;bottom:auto;width:400px;max-height:min(72vh,600px);border-radius:var(--r-lg);animation:pagina .2s var(--ease) both}
+  }
+  .np-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line);font-weight:750}
+  .np-list{overflow-y:auto;list-style:none;margin:0;padding:0;flex:1}
+  .np-item{display:flex;gap:13px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:13.5px;cursor:pointer;transition:background .16s}
+  .np-item:hover{background:var(--surface-2)}
+  .np-item.nova{background:var(--brand-50)}
+  .np-ic{width:38px;height:38px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;font-size:17px;flex:none}
+  .np-t{font-weight:650}
+  .np-s{color:var(--ink-3);font-size:12.5px;margin-top:3px}
+  .np-foot{padding:14px 18px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+  .sheet{position:fixed;inset:0;z-index:75;display:flex;align-items:flex-end;justify-content:center}
+  .sheet-bg{position:absolute;inset:0;background:rgba(6,16,26,.55);backdrop-filter:blur(3px);animation:fade .28s ease both}
+  @keyframes fade{from{opacity:0}}
+  .sheet-card{position:relative;width:100%;max-width:560px;background:var(--surface);border-radius:var(--r-xl) var(--r-xl) 0 0;
+    padding:10px 14px calc(18px + env(safe-area-inset-bottom));box-shadow:var(--sh-3);animation:subir .34s var(--ease) both;
+    max-height:86dvh;overflow-y:auto}
+  .sheet-grip{width:44px;height:5px;border-radius:999px;background:var(--surface-3);margin:6px auto 12px}
+  .sheet-item{display:flex;align-items:center;gap:14px;width:100%;padding:15px 14px;border:0;background:none;border-radius:var(--r);
+    font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;text-align:left;transition:background .16s}
+  .sheet-item:hover{background:var(--surface-2)}
+  .sheet-item .si{width:40px;height:40px;border-radius:13px;background:var(--surface-2);display:grid;place-items:center;font-size:18px;flex:none}
+  .sheet-user{display:flex;align-items:center;gap:12px;padding:12px 14px 16px;border-bottom:1px solid var(--line);margin-bottom:8px}
+  .sheet-user .user-email{color:var(--ink-2);font-weight:600}
+  dialog{border:0;padding:0;color:var(--ink);background:var(--surface);box-shadow:var(--sh-3);
+    width:min(440px,calc(100% - 28px));border-radius:var(--r-xl)}
+  dialog::backdrop{background:rgba(6,16,26,.55);backdrop-filter:blur(3px)}
+  dialog[open]{animation:pagina .24s var(--ease) both}
+  @media(max-width:600px){
+    dialog{width:100%;max-width:none;margin:auto auto 0;border-radius:var(--r-xl) var(--r-xl) 0 0}
+    dialog[open]{animation:subir .3s var(--ease) both}
+  }
+  .dlg-body{padding:24px 24px 8px}
+  .dlg-body h3{margin:0 0 10px;font-size:18px;font-weight:750}
+  .dlg-body p{margin:0;color:var(--ink-2);font-size:14.5px;line-height:1.5}
+  .dlg-actions{display:flex;gap:11px;justify-content:flex-end;padding:20px 24px calc(22px + env(safe-area-inset-bottom));flex-wrap:wrap}
+  .dlg-actions .btn{flex:1 1 140px}
+  .toasts{position:fixed;left:50%;bottom:calc(var(--tabbar) + 18px + env(safe-area-inset-bottom));transform:translateX(-50%);
+    display:grid;gap:9px;z-index:110;width:min(430px,calc(100% - 28px));pointer-events:none}
+  @media(min-width:1024px){ .toasts{bottom:24px} }
+  .toast{background:#0b1b2b;color:#fff;padding:14px 17px;border-radius:var(--r);font-size:14px;font-weight:500;
+    box-shadow:var(--sh-3);animation:up .3s var(--ease)}
+  .toast.success{background:linear-gradient(135deg,#00784b,#00a862)}
+  .toast.error{background:linear-gradient(135deg,#b91c1c,#ef4444)}
+  @keyframes up{from{opacity:0;transform:translateY(12px)}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<div id="boot" class="boot"><div class="spinner" aria-label="Carregando"></div></div>
+
+<section id="login" class="login" hidden>
+  <form id="login-form" class="login-card" novalidate>
+    <div class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" width="20" height="20" fill="#fff" aria-hidden="true"><path d="M12 2.7c-.3 0-.6.2-.8.4C9.6 5.3 5 11.4 5 15a7 7 0 0 0 14 0c0-3.6-4.6-9.7-6.2-11.9-.2-.2-.5-.4-.8-.4z"/></svg></span>
+      <span>Bomba Denisio</span>
+    </div>
+    <h1 class="login-title">Entrar no painel</h1>
+    <p class="hint">Acesso restrito à administração.</p>
+    <div class="field">
+      <label for="email">E-mail</label>
+      <input id="email" class="input" type="email" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="senha">Senha</label>
+      <div class="pass">
+        <input id="senha" class="input" type="password" autocomplete="current-password" required>
+        <button type="button" id="ver-senha" class="pass-btn" aria-label="Mostrar senha">Mostrar</button>
+      </div>
+    </div>
+    <label class="check"><input type="checkbox" id="lembrar" checked> Manter conectado neste aparelho</label>
+    <p id="login-erro" class="form-erro" role="alert" hidden></p>
+    <button id="login-btn" class="btn btn-primary btn-block mt-s" type="submit">Entrar</button>
+  </form>
+</section>
+
+<div id="app" hidden>
+  <aside id="sidebar" class="sidebar" aria-label="Menu principal">
+    <div class="side-head">
+      <div class="brand light">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" width="20" height="20" fill="#fff" aria-hidden="true"><path d="M12 2.7c-.3 0-.6.2-.8.4C9.6 5.3 5 11.4 5 15a7 7 0 0 0 14 0c0-3.6-4.6-9.7-6.2-11.9-.2-.2-.5-.4-.8-.4z"/></svg></span>
+        <span>Bomba Denisio</span>
+      </div>
+      <button class="icon-btn close-btn" id="close-btn" aria-label="Fechar menu">✕</button>
+    </div>
+    <nav class="nav">
+      <button class="nav-item" data-page="geral"><span class="ni">🏠</span>Visão Geral</button>
+      <button class="nav-item" data-page="bomba"><span class="ni">💧</span>Controle da Bomba</button>
+      <button class="nav-item" data-page="multigarrafao"><span class="ni">🧴</span>Multi-garrafão</button>
+      <button class="nav-item" data-page="transacoes"><span class="ni">💰</span>Transações</button>
+      <button class="nav-item" data-page="estornos"><span class="ni">↩️</span>Estornos<span class="nav-badge" id="nb-estornos" hidden>0</span></button>
+      <button class="nav-item" data-page="relatorios"><span class="ni">📊</span>Relatórios</button>
+      <button class="nav-item" data-page="conexao"><span class="ni">📡</span>Conexão</button>
+      <button class="nav-item" data-page="logsesp"><span class="ni">📝</span>Logs ESP</button>
+      <button class="nav-item" data-page="logsapi"><span class="ni">🌐</span>Logs API</button>
+      <button class="nav-item" data-page="config"><span class="ni">⚙️</span>Configurações</button>
+      <button class="nav-item" data-page="ota"><span class="ni">🛠️</span>Atualização OTA</button>
+    </nav>
+    <div class="side-foot">
+      <div class="user"><span class="avatar" id="user-ini">•</span><span class="user-email" id="user-email"></span></div>
+      <button class="btn btn-side" id="logout">Sair</button>
+    </div>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar">☰</button>
+      <span class="topo-marca" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="#fff"><path d="M12 2.7c-.3 0-.6.2-.8.4C9.6 5.3 5 11.4 5 15a7 7 0 0 0 14 0c0-3.6-4.6-9.7-6.2-11.9-.2-.2-.5-.4-.8-.4z"/></svg></span>
+      <h1 id="page-title">Visão Geral</h1>
+      <span class="pill wait esp-pill"><span class="dot"></span><span class="txt">Conectando…</span></span>
+      <button class="icon-btn bell" id="bell" aria-label="Notificações">🔔<span class="bell-count" id="bell-count" hidden>0</span></button>
+    </header>
+    <div id="net-banner" class="banner warn slim" hidden>⚠️ Painel sem conexão com o Firebase. Tentando reconectar…</div>
+
+    <div class="np" id="np" hidden>
+      <div class="np-head"><span>Notificações</span><button class="link" id="np-ler">Marcar como lidas</button></div>
+      <ul class="np-list" id="np-list"></ul>
+      <div class="np-foot">
+        <button class="link" id="np-alertas">🔔 Ativar alertas do navegador</button>
+        <span class="hint" id="np-info"></span>
+      </div>
+    </div>
+
+    <main class="content">
+
+      <!-- VISÃO GERAL -->
+      <section class="page" id="p-geral">
+        <div id="offline-banner" class="banner error" hidden><span>📡</span><span><strong>Máquina offline.</strong> <span id="offline-txt"></span></span></div>
+        <div id="decisao-banner" class="banner attn" hidden><span>⚠️</span><span id="decisao-txt"></span><button class="btn btn-sm btn-warn" data-go="estornos">Ver agora</button></div>
+        <div class="card cash">
+          <div class="cash-head">
+            <h2>Valores recebidos</h2>
+            <button class="eye" id="btn-olho" aria-pressed="false"><span id="olho-ic">👁️</span><span id="olho-txt">Ocultar</span></button>
+          </div>
+          <div class="cash-grid">
+            <div class="cash-hoje"><span class="cash-l">Hoje</span><span class="cash-v" id="cash-hoje">—</span><span class="cash-s" id="cash-hoje-s">—</span></div>
+            <div><span class="cash-l">Este mês</span><span class="cash-v" id="cash-mes">—</span><span class="cash-s" id="cash-mes-s">—</span></div>
+            <div><span class="cash-l">Este ano</span><span class="cash-v" id="cash-ano">—</span><span class="cash-s" id="cash-ano-s">—</span></div>
+          </div>
+          <div class="cash-foot"><span id="cash-est">Estornado no mês: —</span><span id="cash-liq">Líquido do mês: —</span></div>
+        </div>
+        <div class="kpis mt">
+          <div class="card kpi" id="k-esp"><div class="kpi-label">📡 Máquina</div><div class="kpi-value">—</div><div class="kpi-sub"></div></div>
+          <div class="card kpi" id="k-bomba"><div class="kpi-label">💧 Bomba</div><div class="kpi-value">—</div><div class="kpi-sub"></div></div>
+          <div class="card kpi" id="k-sistema"><div class="kpi-label">⏻ Sistema</div><div class="kpi-value">—</div><div class="kpi-sub"></div></div>
+          <div class="card kpi" id="k-valor"><div class="kpi-label">💰 Valor do PIX</div><div class="kpi-value">—</div><div class="kpi-sub"></div></div>
+          <div class="card kpi" id="k-tempo"><div class="kpi-label">⏱️ Tempo de água</div><div class="kpi-value">—</div><div class="kpi-sub"></div></div>
+          <div class="card kpi" id="k-hoje"><div class="kpi-label">📈 Liberações hoje</div><div class="kpi-value">—</div><div class="kpi-sub"></div></div>
+        </div>
+        <div class="two mt">
+          <div class="card">
+            <div class="card-head">
+              <div><h2>Transações nos últimos 7 dias</h2><p class="hint">Pagamentos processados por dia</p></div>
+              <div class="legend"><span><i style="background:var(--pos)"></i>Liberadas</span><span><i style="background:var(--warn)"></i>Estornadas</span><span><i style="background:var(--ink-3)"></i>Outras</span></div>
+            </div>
+            <div id="chart" class="chart"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h2>Últimas transações</h2><button class="link" data-go="transacoes">Ver todas →</button></div>
+            <ul class="list" id="recentes"></ul>
+          </div>
+        </div>
+        <div class="card mt">
+          <div class="card-head">
+            <div><h2>Saúde do dispositivo</h2><p class="hint">Memória e tempo ligado são atualizados a cada minuto</p></div>
+            <span class="badge" id="h-estado">—</span>
+          </div>
+          <div class="mini-grid">
+            <div><span class="mini-l">Ligada há</span><span class="mini-v" id="h-uptime">—</span></div>
+            <div><span class="mini-l">Último sinal</span><span class="mini-v" id="h-sinal">—</span></div>
+            <div><span class="mini-l">Sinal Wi-Fi</span><span class="mini-v" id="h-rssi">—</span></div>
+            <div><span class="mini-l">Memória livre</span><span class="mini-v" id="h-heap">—</span></div>
+            <div><span class="mini-l">Maior bloco livre</span><span class="mini-v" id="h-bloco">—</span></div>
+            <div><span class="mini-l">Versão do firmware</span><span class="mini-v" id="h-versao">—</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BOMBA -->
+      <section class="page" id="p-bomba" hidden>
+        <div class="two">
+          <div class="card center">
+            <div id="orb" class="orb"><div class="water"></div><div class="orb-label"><div><div id="orb-main">…</div><div id="orb-sub" class="orb-sub"></div></div></div></div>
+            <p class="hint" id="bomba-info"></p>
+            <div id="bomba-aviso" class="banner warn mt-s" hidden>⚠️ A máquina está offline. O comando fica aguardando até ela reconectar.</div>
+            <div class="btn-row">
+              <button class="btn btn-success" id="btn-ligar">💧 Ligar bomba</button>
+              <button class="btn btn-danger" id="btn-desligar">⏹ Desligar</button>
+            </div>
+            <button class="btn btn-ghost btn-block mt-s" id="btn-cancelar-fila">🛑 Cancelar fila multi-garrafão</button>
+            <p class="note">Ligar a bomba pede a sua senha, porque libera água sem pagamento.</p>
+          </div>
+          <div class="card">
+            <h2>Confirmação do comando</h2>
+            <p class="hint">Acompanhe se a máquina recebeu e executou.</p>
+            <div id="cmd-empty" class="empty">Nenhum comando enviado nesta sessão.</div>
+            <div id="cmd-box" hidden>
+              <div class="cmd-title" id="cmd-title"></div>
+              <ul class="steps" id="cmd-steps"></ul>
+              <p id="cmd-msg" class="fb"></p>
+              <button class="btn btn-ghost mt-s" id="cmd-cancel" hidden>Cancelar comando</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MULTI-GARRAFÃO -->
+      <section class="page" id="p-multigarrafao" hidden>
+        <div id="mg-banner" class="banner attn" hidden>
+          <span>🧴</span><span id="mg-banner-txt"></span>
+        </div>
+        <div class="two">
+          <div class="card center">
+            <div class="card-head" style="justify-content:center">
+              <div><h2>Pedido em andamento</h2><p class="hint" id="mg-pedido-id">—</p></div>
+            </div>
+            <div class="orb" id="mg-orb">
+              <div class="water"></div>
+              <div class="orb-label">
+                <div>
+                  <div id="mg-orb-main">—</div>
+                  <div id="mg-orb-sub" class="orb-sub"></div>
+                </div>
+              </div>
+            </div>
+            <p class="hint" id="mg-proxima">—</p>
+            <div class="mini-grid mt" style="grid-template-columns:repeat(2,1fr)">
+              <div><span class="mini-l">Garrafões</span><span class="mini-v" id="mg-total">—</span></div>
+              <div><span class="mini-l">Completos</span><span class="mini-v" id="mg-completos">—</span></div>
+              <div><span class="mini-l">Faltam</span><span class="mini-v" id="mg-pendentes">—</span></div>
+              <div><span class="mini-l">Cronômetro</span><span class="mini-v" id="mg-cron">—</span></div>
+            </div>
+            <button class="btn btn-danger btn-block mt" id="mg-cancelar" hidden>
+              🛑 Cancelar pedido atual
+            </button>
+            <p class="note" id="mg-nota">Sem pedido em andamento no momento.</p>
+          </div>
+          <div class="card">
+            <h2>Configurações de multi-garrafão</h2>
+            <p class="hint">O firmware aplica em até 5 s após salvar.</p>
+            <div class="toggle-row" style="border-top:0;padding-top:8px">
+              <div>
+                <div style="font-weight:600">Ativar multi-garrafão</div>
+                <p class="hint">Se desligado, um PIX de R$ 25,00 com valor unitário R$ 2,50 será recusado (não reconhece 10 garrafões).</p>
+              </div>
+              <label class="switch"><input type="checkbox" id="mg-ativo"><span class="track"></span></label>
+            </div>
+            <div class="mt">
+              <label class="mini-l" for="mg-max">Máximo de garrafões por PIX</label>
+              <div class="range-row mt-s">
+                <input type="range" id="mg-max-range" min="1" max="50" step="1">
+                <div class="num-wrap"><input id="mg-max" class="input num" type="number" min="1" max="50" step="1"><span>un</span></div>
+              </div>
+            </div>
+            <div class="mt">
+              <label class="mini-l" for="mg-intervalo">Intervalo entre garrafões (segundos)</label>
+              <div class="range-row mt-s">
+                <input type="range" id="mg-intervalo-range" min="5" max="300" step="5">
+                <div class="num-wrap"><input id="mg-intervalo" class="input num" type="number" min="5" max="300" step="5"><span>s</span></div>
+              </div>
+              <p class="hint" id="mg-intervalo-hint">Tempo de pausa entre um garrafão e o próximo.</p>
+            </div>
+            <p class="fb" id="mg-fb"></p>
+            <button class="btn btn-primary btn-block mt" id="mg-salvar">💾 Salvar configurações</button>
+            <ul class="regras mt">
+              <li id="mg-r1">🧴 —</li>
+              <li id="mg-r2">—</li>
+              <li id="mg-r3">—</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card mt">
+          <div class="card-head">
+            <div><h2>Últimos pedidos multi-garrafão</h2><p class="hint">Extraído das transações com mais de 1 garrafão.</p></div>
+          </div>
+          <ul class="list" id="mg-historico"></ul>
+        </div>
+      </section>
+
+      <!-- TRANSAÇÕES -->
+      <section class="page" id="p-transacoes" hidden>
+        <div class="sum-grid">
+          <div class="card sum s-ok"><span class="sum-l">Liberadas</span><span class="sum-v" id="s-lib">0</span><span class="sum-s" id="s-lib-v">—</span></div>
+          <div class="card sum s-warn"><span class="sum-l">Estornadas</span><span class="sum-v" id="s-est">0</span><span class="sum-s" id="s-est-v">—</span></div>
+          <div class="card sum"><span class="sum-l">Outras</span><span class="sum-v" id="s-out">0</span><span class="sum-s">não liberadas</span></div>
+        </div>
+        <div class="card mt">
+          <div class="filters">
+            <input id="tx-busca" class="input search" type="search" placeholder="Buscar pelo ID do pagamento" autocomplete="off">
+            <select id="tx-status" class="input" aria-label="Filtrar por status">
+              <option value="todos">Todos os status</option>
+              <option value="liberado">Aprovado (água liberada)</option>
+              <option value="estornado">Estornado</option>
+              <option value="aguardando_autorizacao">Aguardando decisão</option>
+              <option value="estorno_pendente">Estorno em andamento</option>
+              <option value="estorno_falhou">Estorno com falha</option>
+              <option value="estorno_recusado">Estorno recusado</option>
+              <option value="ignorado_data_invalida">Data inválida</option>
+            </select>
+            <select id="tx-motivo" class="input" aria-label="Filtrar por motivo">
+              <option value="todos">Todos os motivos</option>
+              <option value="valor_ok">PIX com valor correto</option>
+              <option value="manual">Liberação manual</option>
+              <option value="valor_incorreto">Valor diferente</option>
+              <option value="dentro_da_janela">Offline, dentro da janela</option>
+              <option value="fora_da_janela">Offline, fora da janela</option>
+              <option value="sistema_pausado">Sistema pausado</option>
+              <option value="autorizado_usuario">Autorizado por você</option>
+              <option value="multi_garrafoes">Multi-garrafão</option>
+            </select>
+          </div>
+          <div class="list-head" id="tx-count"></div>
+          <ul class="list" id="tx-list"></ul>
+          <p class="note">Mostrando os últimos 40 dias. Para períodos maiores, use a aba Relatórios.</p>
+        </div>
+      </section>
+
+      <!-- ESTORNOS -->
+      <section class="page" id="p-estornos" hidden>
+        <div id="freio-banner" class="banner error" hidden>
+          <span>🛑</span><span id="freio-txt"></span>
+          <button class="btn btn-sm btn-danger" id="btn-freio">Reativar automático</button>
+        </div>
+        <div id="sim-banner" class="banner attn" hidden><span>🧪</span><span>Modo simulação ligado: a máquina só anota o que faria, sem devolver dinheiro de verdade.</span></div>
+        <div class="card" id="card-simulados" hidden>
+          <div class="card-head"><div><h2>🧪 Simulação — teria estornado</h2><p class="hint">Confira se a máquina apontaria os casos certos antes de ligar o automático.</p></div></div>
+          <ul class="list" id="simulado-list"></ul>
+        </div>
+        <div class="card mt">
+          <div class="card-head">
+            <div><h2>⚠️ Aguardando sua decisão</h2><p class="hint">PIX que chegaram fora das regras automáticas. Autorizar o estorno devolve o dinheiro ao cliente.</p></div>
+          </div>
+          <ul class="list" id="decisao-list"></ul>
+        </div>
+        <div class="card mt">
+          <div class="card-head"><div><h2>Estornos em andamento e com falha</h2><p class="hint">A máquina tenta de novo sozinha, com espera crescente.</p></div></div>
+          <ul class="list" id="andamento-list"></ul>
+        </div>
+        <div class="card mt">
+          <div class="card-head">
+            <div><h2>Regras de estorno</h2><p class="hint">Definem o que a máquina faz sozinha.</p></div>
+          </div>
+          <form id="form-regras" novalidate>
+            <div class="mt-s">
+              <label class="mini-l" for="r-liberar">Liberar a água se o PIX chegar em até (segundos)</label>
+              <div class="range-row mt-s">
+                <input type="range" id="r-liberar-range" min="30" max="600" step="10" aria-label="Segundos para liberar">
+                <div class="num-wrap"><input id="r-liberar" class="input num" type="number" min="30" max="900" step="1"><span>s</span></div>
+              </div>
+            </div>
+            <div class="mt">
+              <label class="mini-l" for="r-janela">Janela de estorno automático (minutos)</label>
+              <div class="range-row mt-s">
+                <input type="range" id="r-janela-range" min="1" max="120" step="1" aria-label="Minutos da janela">
+                <div class="num-wrap"><input id="r-janela" class="input num" type="number" min="1" max="240" step="1"><span>min</span></div>
+              </div>
+            </div>
+            <div class="toggle-row mt">
+              <div><div style="font-weight:600">Liberar água para PIX pago com a máquina fora do ar</div><p class="hint">Desligado (recomendado): quem pagou com a máquina fora do ar nunca recebe água, só o estorno.</p></div>
+              <label class="switch"><input type="checkbox" id="r-liberar-voltar" aria-label="Liberar após voltar"><span class="track"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div style="font-weight:600">Estornar sozinho quando o valor for diferente</div><p class="hint">Se desligado, esses PIX ficam aguardando a sua decisão.</p></div>
+              <label class="switch"><input type="checkbox" id="r-auto-valor" aria-label="Estorno automático por valor diferente"><span class="track"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><div style="font-weight:600">Estornar sozinho com o sistema pausado</div><p class="hint">Se desligado, esses PIX ficam aguardando a sua decisão.</p></div>
+              <label class="switch"><input type="checkbox" id="r-auto-pausado" aria-label="Estorno automático com sistema pausado"><span class="track"></span></label>
+            </div>
+            <ul class="regras mt"><li id="rg1"></li><li id="rg2"></li><li id="rg3"></li><li id="rg4"></li><li id="rg5"></li></ul>
+            <p class="fb" id="fb-regras"></p>
+            <button class="btn btn-primary mt-s" type="submit">Salvar regras</button>
+          </form>
+        </div>
+        <div class="card mt">
+          <div class="card-head">
+            <div><h2>🛡️ Segurança do estorno</h2><p class="hint">Limites que impedem devolução em série se algo der errado.</p></div>
+          </div>
+          <div class="toggle-row" style="border-top:0">
+            <div><div style="font-weight:600">Modo simulação</div><p class="hint">A máquina anota o que faria, sem devolver nada. Ideal na primeira semana.</p></div>
+            <label class="switch"><input type="checkbox" id="s-simulacao" aria-label="Modo simulação"><span class="track"></span></label>
+          </div>
+          <form id="form-seguranca" novalidate>
+            <div class="campo-2 mt-s">
+              <div class="field" style="margin:0"><label for="s-hora">Máximo de estornos por hora</label><input id="s-hora" class="input" type="number" min="1" max="100" step="1"></div>
+              <div class="field" style="margin:0"><label for="s-dia">Máximo por dia</label><input id="s-dia" class="input" type="number" min="1" max="500" step="1"></div>
+            </div>
+            <div class="campo-2 mt-s">
+              <div class="field" style="margin:0"><label for="s-pausa">Pausa após liberar água (s)</label><input id="s-pausa" class="input" type="number" min="0" max="600" step="5"></div>
+              <div class="field" style="margin:0"><label for="s-percent">Limite de estornos no dia (%)</label><input id="s-percent" class="input" type="number" min="5" max="100" step="1"></div>
+            </div>
+            <ul class="regras mt"><li id="sg1"></li><li id="sg2"></li></ul>
+            <p class="fb" id="fb-seguranca"></p>
+            <button class="btn btn-primary mt-s" type="submit">Salvar segurança</button>
+          </form>
+          <div class="mini-grid mt">
+            <div><span class="mini-l">Estornos nesta hora</span><span class="mini-v" id="sg-hora">—</span></div>
+            <div><span class="mini-l">Estornos hoje</span><span class="mini-v" id="sg-dia">—</span></div>
+            <div><span class="mini-l">Memória de entregas desde</span><span class="mini-v" id="sg-cobertura">—</span></div>
+          </div>
+        </div>
+        <div class="card mt">
+          <div class="card-head">
+            <div><h2>Histórico de estornos</h2><p class="hint">Todos os estornos com motivo, horário e quem autorizou.</p></div>
+            <div class="chips" data-filter="hist">
+              <button class="chip active" data-v="todos">Todos</button>
+              <button class="chip" data-v="dentro_da_janela">Janela</button>
+              <button class="chip" data-v="autorizado_usuario">Autorizados</button>
+              <button class="chip" data-v="valor_incorreto">Valor</button>
+              <button class="chip" data-v="sistema_pausado">Pausado</button>
+            </div>
+          </div>
+          <ul class="list" id="hist-list"></ul>
+        </div>
+      </section>
+
+      <!-- RELATÓRIOS -->
+      <section class="page" id="p-relatorios" hidden>
+        <div class="card">
+          <div class="card-head"><div><h2>Gerar relatório</h2><p class="hint">Filtre e baixe em PDF, Excel ou CSV para o Power BI.</p></div></div>
+          <div class="field">
+            <label for="rel-periodo">Período</label>
+            <select id="rel-periodo" class="input">
+              <option value="hoje">Hoje</option>
+              <option value="ontem">Ontem</option>
+              <option value="7">Últimos 7 dias</option>
+              <option value="30" selected>Últimos 30 dias</option>
+              <option value="mes">Este mês</option>
+              <option value="mespassado">Mês passado</option>
+              <option value="ano">Este ano</option>
+              <option value="anopassado">Ano passado</option>
+              <option value="custom">Personalizado</option>
+            </select>
+          </div>
+          <div class="campo-2 mt-s">
+            <div class="field" style="margin:0"><label for="rel-de">De</label><input id="rel-de" class="input" type="datetime-local"></div>
+            <div class="field" style="margin:0"><label for="rel-ate">Até</label><input id="rel-ate" class="input" type="datetime-local"></div>
+          </div>
+          <div class="campo-2 mt-s">
+            <div class="field" style="margin:0"><label for="rel-h1">Hora inicial do dia</label><select id="rel-h1" class="input"></select></div>
+            <div class="field" style="margin:0"><label for="rel-h2">Hora final do dia</label><select id="rel-h2" class="input"></select></div>
+          </div>
+          <div class="mt">
+            <div class="mini-l" style="margin-bottom:6px">Status</div>
+            <div class="chips" id="rel-status">
+              <button type="button" class="chip active" data-v="todos">Todos</button>
+              <button type="button" class="chip" data-v="aprovado">Aprovados</button>
+              <button type="button" class="chip" data-v="estornado">Estornados</button>
+              <button type="button" class="chip" data-v="decisao">Aguardando decisão</button>
+              <button type="button" class="chip" data-v="andamento">Em estorno / falha</button>
+              <button type="button" class="chip" data-v="recusado">Recusados</button>
+            </div>
+          </div>
+          <label class="check mt-s"><input type="checkbox" id="rel-manual"> Incluir liberações manuais</label>
+          <p class="fb" id="fb-rel"></p>
+          <button class="btn btn-primary btn-block" id="btn-gerar">📊 Gerar relatório</button>
+        </div>
+        <div class="card mt" id="rel-res" hidden>
+          <div class="card-head"><div><h2>Resultado</h2><p class="hint" id="rel-periodo-txt"></p></div></div>
+          <div class="sum-grid">
+            <div class="card sum"><span class="sum-l">PIX no período</span><span class="sum-v" id="r-qtd">0</span><span class="sum-s" id="r-bruto">—</span></div>
+            <div class="card sum s-warn"><span class="sum-l">Estornado</span><span class="sum-v" id="r-est">—</span><span class="sum-s" id="r-est-n">—</span></div>
+            <div class="card sum s-ok"><span class="sum-l">Líquido</span><span class="sum-v" id="r-liq">—</span><span class="sum-s">bruto − estornos</span></div>
+          </div>
+          <div class="exp-btns mt">
+            <button class="btn btn-ghost" id="exp-pdf">📄 PDF</button>
+            <button class="btn btn-ghost" id="exp-xlsx">📗 Excel</button>
+            <button class="btn btn-ghost" id="exp-csv">📊 Power BI (CSV)</button>
+          </div>
+          <div class="table-wrap mt"><table class="rel"><thead id="rel-head"></thead><tbody id="rel-body"></tbody></table></div>
+          <p class="note" id="rel-nota"></p>
+        </div>
+      </section>
+
+      <!-- CONEXÃO -->
+      <section class="page" id="p-conexao" hidden>
+        <div class="card">
+          <div class="card-head"><div><h2>Estado da conexão</h2><p class="hint">A máquina se reconecta sozinha: nova tentativa a cada 10 s, rádio reiniciado em 1 min e reinício completo em 3 min.</p></div><span class="pill wait esp-pill"><span class="dot"></span><span class="txt">—</span></span></div>
+          <div class="mini-grid">
+            <div><span class="mini-l">Situação</span><span class="mini-v" id="cx-estado">—</span></div>
+            <div><span class="mini-l">Sinal Wi-Fi</span><span class="mini-v" id="cx-rssi">—</span></div>
+            <div><span class="mini-l">Endereço IP</span><span class="mini-v mono" id="cx-ip">—</span></div>
+          </div>
+        </div>
+        <div class="card mt">
+          <div class="card-head"><div><h2>Últimos 7 dias</h2></div></div>
+          <div class="mini-grid">
+            <div><span class="mini-l">Quedas de conexão</span><span class="mini-v" id="cx-quedas">—</span></div>
+            <div><span class="mini-l">Tempo total offline</span><span class="mini-v" id="cx-tempo">—</span></div>
+            <div><span class="mini-l">Reinícios</span><span class="mini-v" id="cx-reinicios">—</span></div>
+            <div><span class="mini-l">Faltas de energia</span><span class="mini-v" id="cx-energia">—</span></div>
+          </div>
+        </div>
+        <div class="card mt">
+          <div class="card-head"><div><h2>Histórico</h2><p class="hint">Hora que caiu, hora que voltou, motivo e o que a máquina fez.</p></div></div>
+          <ul class="list" id="cx-list"></ul>
+        </div>
+      </section>
+
+      <!-- LOGS ESP -->
+      <section class="page" id="p-logsesp" hidden>
+        <div class="card">
+          <div class="card-head">
+            <div><h2>Eventos da máquina</h2><p class="hint"><span class="live"></span>Atualiza em tempo real · toque para expandir</p></div>
+            <div class="chips" data-filter="esp">
+              <button class="chip active" data-v="todos">Todos</button>
+              <button class="chip" data-v="info">Info</button>
+              <button class="chip" data-v="warn">Alertas</button>
+              <button class="chip" data-v="error">Erros</button>
+            </div>
+          </div>
+          <ul class="list" id="esp-list"></ul>
+        </div>
+      </section>
+
+      <!-- LOGS API -->
+      <section class="page" id="p-logsapi" hidden>
+        <div class="card">
+          <div class="card-head">
+            <div><h2>Falhas com o Mercado Pago</h2><p class="hint"><span class="live"></span>A máquina registra aqui só o que deu errado · toque para expandir</p></div>
+            <div class="chips" data-filter="api">
+              <button class="chip active" data-v="todos">Todas</button>
+              <button class="chip" data-v="payments/search">Consulta</button>
+              <button class="chip" data-v="refunds">Estorno</button>
+            </div>
+          </div>
+          <ul class="list" id="api-list"></ul>
+        </div>
+      </section>
+
+      <!-- CONFIGURAÇÕES -->
+      <section class="page" id="p-config" hidden>
+        <div class="cfg-grid">
+          <div class="card span">
+            <div class="row-flex">
+              <div><h2>Sistema</h2><p class="hint" id="cfg-ligado-txt">—</p></div>
+              <label class="switch"><input type="checkbox" id="cfg-ligado" aria-label="Sistema ligado"><span class="track"></span></label>
+            </div>
+            <p class="fb" id="fb-ligado"></p>
+          </div>
+          <div class="card">
+            <h2>Valor do PIX</h2>
+            <p class="hint">Valor exato que libera a água. Atual: <strong id="cfg-valor-atual">—</strong></p>
+            <form id="form-valor" class="inline mt-s" novalidate>
+              <div class="dinheiro"><span>R$</span><input id="cfg-valor" class="input" inputmode="decimal" placeholder="0,00" autocomplete="off" aria-label="Novo valor"></div>
+              <button class="btn btn-primary" type="submit">Salvar</button>
+            </form>
+            <p class="fb" id="fb-valor"></p>
+          </div>
+          <div class="card">
+            <h2>Tempo da bomba</h2>
+            <p class="hint">Quanto tempo a água sai por liberação (5 a 300 s). Atual: <strong id="cfg-tempo-atual">—</strong></p>
+            <form id="form-tempo" class="mt-s" novalidate>
+              <div class="range-row">
+                <input type="range" id="cfg-tempo-range" min="5" max="300" step="1" aria-label="Tempo em segundos">
+                <div class="num-wrap"><input id="cfg-tempo" class="input num" type="number" min="5" max="300" step="1"><span>s</span></div>
+              </div>
+              <div class="chips mt-s" id="tempo-presets">
+                <button type="button" class="chip" data-v="15">15 s</button>
+                <button type="button" class="chip" data-v="30">30 s</button>
+                <button type="button" class="chip" data-v="60">1 min</button>
+                <button type="button" class="chip" data-v="120">2 min</button>
+              </div>
+              <button class="btn btn-primary mt-s" type="submit">Salvar tempo</button>
+            </form>
+            <p class="fb" id="fb-tempo"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- OTA -->
+      <section class="page" id="p-ota" hidden>
+        <div class="two">
+          <div class="card">
+            <h2>Enviar nova versão</h2>
+            <p class="hint">Cole o link direto do arquivo <span class="mono">.bin</span>. A máquina baixa, instala e reinicia.</p>
+            <form id="form-ota" class="mt-s" novalidate>
+              <div class="field">
+                <label for="ota-url">Link do firmware</label>
+                <input id="ota-url" class="input" type="url" placeholder="https://…/firmware.bin" autocomplete="off" spellcheck="false">
+              </div>
+              <p class="fb" id="fb-ota"></p>
+              <button class="btn btn-primary btn-block mt-s" id="ota-btn" type="submit">🛠️ Enviar atualização</button>
+            </form>
+            <p class="note">Mantenha a máquina ligada e com Wi-Fi durante a atualização.</p>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div><h2>Status</h2><p class="hint" id="ota-quando">—</p></div>
+              <span class="badge" id="ota-badge">—</span>
+            </div>
+            <div id="ota-empty" class="empty">Nenhuma atualização em andamento.</div>
+            <ul class="steps" id="ota-steps"></ul>
+            <p class="fb" id="ota-msg"></p>
+            <div class="kv mt"><span>Versão instalada</span><span id="ota-versao">—</span></div>
+            <div class="kv mt-s"><span>Último firmware enviado</span><span id="ota-url-atual" class="mono break">—</span></div>
+            <button class="btn btn-ghost mt" id="ota-cancel" hidden>Cancelar pedido</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <nav class="tabbar" id="tabbar" aria-label="Navegação">
+    <button class="tab" data-page="geral"><span class="ti">🏠</span>Início</button>
+    <button class="tab" data-page="multigarrafao"><span class="ti">🧴</span>Multi</button>
+    <button class="tab" data-page="transacoes"><span class="ti">💰</span>Transações</button>
+    <button class="tab" data-page="estornos"><span class="ti">↩️</span>Estornos<span class="tab-badge" id="tb-estornos" hidden>0</span></button>
+    <button class="tab" data-page="relatorios"><span class="ti">📊</span>Relatórios</button>
+    <button class="tab" id="tab-mais"><span class="ti">☰</span>Mais</button>
+  </nav>
+
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet-bg" data-fechar-sheet></div>
+    <div class="sheet-card" role="dialog" aria-label="Mais opções">
+      <div class="sheet-grip"></div>
+      <div class="sheet-user">
+        <span class="avatar" id="sheet-ini">•</span>
+        <div style="min-width:0"><div class="user-email" id="sheet-email"></div><div class="hint" style="margin:0">Administração</div></div>
+      </div>
+      <button class="sheet-item" data-page="bomba"><span class="si">💧</span>Controle da Bomba</button>
+      <button class="sheet-item" data-page="multigarrafao"><span class="si">🧴</span>Multi-garrafão</button>
+      <button class="sheet-item" data-page="conexao"><span class="si">📡</span>Conexão</button>
+      <button class="sheet-item" data-page="config"><span class="si">⚙️</span>Configurações</button>
+      <button class="sheet-item" data-page="logsesp"><span class="si">📝</span>Logs da máquina</button>
+      <button class="sheet-item" data-page="logsapi"><span class="si">🌐</span>Falhas do Mercado Pago</button>
+      <button class="sheet-item" data-page="ota"><span class="si">🛠️</span>Atualização do firmware</button>
+      <button class="sheet-item" id="sheet-sair"><span class="si">🚪</span>Sair do painel</button>
+    </div>
+  </div>
+</div>
+
+<dialog id="dlg">
+  <form method="dialog">
+    <div class="dlg-body"><h3 id="dlg-t"></h3><p id="dlg-p"></p></div>
+    <div class="dlg-actions">
+      <button class="btn btn-ghost" value="cancel">Cancelar</button>
+      <button class="btn btn-primary" id="dlg-ok" value="ok">Confirmar</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlg-senha">
+  <form id="form-senha">
+    <div class="dlg-body">
+      <h3 id="ds-t">Confirmar</h3>
+      <p id="ds-p"></p>
+      <div class="field"><label for="ds-senha">Senha do painel</label><input id="ds-senha" class="input" type="password" autocomplete="current-password"></div>
+      <p class="form-erro" id="ds-erro" hidden></p>
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost" id="ds-cancel">Cancelar</button>
+      <button type="submit" class="btn btn-primary" id="ds-ok">Confirmar</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+// ================= FIREBASE =================
+const firebaseConfig = {
+  apiKey: "AIzaSyC2m1gqQPdxidg1w8EkXQtyZ4IrJMG-aTc",
+  authDomain: "joaorussas-53ff7.firebaseapp.com",
+  databaseURL: "https://joaorussas-53ff7-default-rtdb.firebaseio.com/",
+  projectId: "joaorussas-53ff7",
+  storageBucket: "joaorussas-53ff7.firebasestorage.app",
+  messagingSenderId: "1016662390955",
+  appId: "1:1016662390955:web:73de6a828afa45146d1fee"
+};
+
+// O firmware grava em /status, /config, /transacoes, /comandos, /developer, /logs/* etc.
+const RAIZ = '';
+
+const OFFLINE_APOS_SEG = 60;
+const CMD_TIMEOUT_MS   = 20000;
+const HEAP_MIN = 30000, BLOCO_MIN = 20000;
+const TZ = 'America/Sao_Paulo';
+const DIAS_AO_VIVO = 40;
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+
+// ================= UTILITÁRIOS =================
+const $  = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const espera = ms => new Promise(r => setTimeout(r, ms));
+const agoraSec = () => Math.floor(Date.now() / 1000);
+const toSec = ts => { const n = Number(ts); return !n || !isFinite(n) ? 0 : n > 1e12 ? Math.floor(n / 1000) : Math.floor(n); };
+const brl = n => Number(n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const fmtData = ts => { const s = toSec(ts); return s ? new Date(s * 1000).toLocaleString('pt-BR', { timeZone: TZ, day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' }) : '—'; };
+const fmtCurta = ts => { const s = toSec(ts); return s ? new Date(s * 1000).toLocaleString('pt-BR', { timeZone: TZ, day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '—'; };
+const dayKey = sec => new Date(sec * 1000).toLocaleDateString('en-CA', { timeZone: TZ });
+function lsGet(k, def){ try { const v = localStorage.getItem(k); return v === null ? def : v; } catch { return def; } }
+function lsSet(k, v){ try { localStorage.setItem(k, v); } catch {} }
+
+function relTime(sec) {
+  if (!sec) return '—';
+  const d = Math.max(0, agoraSec() - sec);
+  if (d < 5) return 'agora mesmo';
+  if (d < 60) return `há ${Math.floor(d)} s`;
+  if (d < 3600) return `há ${Math.floor(d / 60)} min`;
+  if (d < 86400) return `há ${Math.floor(d / 3600)} h`;
+  const dias = Math.floor(d / 86400);
+  return `há ${dias} dia${dias > 1 ? 's' : ''}`;
+}
+function duracao(sec) {
+  sec = Math.floor(Number(sec) || 0);
+  if (sec < 0) return '—';
+  const d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60);
+  if (d) return `${d} d ${h} h`;
+  if (h) return `${h} h ${m} min`;
+  if (m) return `${m} min`;
+  return `${sec} s`;
+}
+function msgErro(err) {
+  const t = String(err?.code || err?.message || '');
+  if (/permission/i.test(t)) return 'Sem permissão. Verifique as regras do Firebase.';
+  if (/network|offline/i.test(t)) return 'Sem conexão com a internet.';
+  return 'Tente novamente.';
+}
+function toast(msg, tipo = '') {
+  const el = document.createElement('div');
+  el.className = 'toast ' + tipo;
+  el.textContent = msg;
+  $('#toasts').appendChild(el);
+  setTimeout(() => el.remove(), 4200);
+}
+function fb(el, tipo, msg) { el.className = 'fb ' + tipo; el.textContent = msg; }
+
+function confirmar(titulo, texto, okTxt = 'Confirmar', perigo = false) {
+  return new Promise(res => {
+    const d = $('#dlg');
+    $('#dlg-t').textContent = titulo;
+    $('#dlg-p').textContent = texto;
+    const ok = $('#dlg-ok');
+    ok.textContent = okTxt;
+    ok.className = 'btn ' + (perigo ? 'btn-danger' : 'btn-primary');
+    d.returnValue = '';
+    d.addEventListener('close', () => res(d.returnValue === 'ok'), { once: true });
+    d.showModal();
+  });
+}
+
+function pedirSenha(titulo, texto, okTxt = 'Confirmar') {
+  return new Promise(res => {
+    const d = $('#dlg-senha'), f = $('#form-senha'), inp = $('#ds-senha'), er = $('#ds-erro'), ok = $('#ds-ok');
+    $('#ds-t').textContent = titulo; $('#ds-p').textContent = texto; ok.textContent = okTxt;
+    inp.value = ''; er.hidden = true;
+    let feito = false;
+    const fechar = v => { if (feito) return; feito = true; f.onsubmit = null; $('#ds-cancel').onclick = null; d.onclose = null; if (d.open) d.close(); res(v); };
+    f.onsubmit = async e => {
+      e.preventDefault();
+      if (!inp.value) { er.textContent = 'Digite a senha.'; er.hidden = false; return; }
+      ok.disabled = true; ok.textContent = 'Verificando…';
+      try {
+        const u = auth.currentUser;
+        await u.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(u.email, inp.value));
+        fechar(true);
+      } catch (err) {
+        er.textContent = /too-many/.test(err.code || '') ? 'Muitas tentativas. Aguarde alguns minutos.' :
+                         /network/.test(err.code || '') ? 'Sem conexão com a internet.' : 'Senha incorreta.';
+        er.hidden = false; inp.select();
+      } finally { ok.disabled = false; ok.textContent = okTxt; }
+    };
+    $('#ds-cancel').onclick = () => fechar(false);
+    d.onclose = () => fechar(false);
+    d.showModal();
+    setTimeout(() => inp.focus(), 60);
+  });
+}
+
+// ================= DICIONÁRIOS =================
+const STATUS = {
+  liberado:               { l: 'Aprovado',            c: 'success' },
+  estornado:              { l: 'Estornado',           c: 'warn' },
+  estorno_pendente:       { l: 'Estornando…',         c: 'primary' },
+  estorno_falhou:         { l: 'Estorno falhou',      c: 'error' },
+  aguardando_autorizacao: { l: 'Aguardando decisão',  c: 'attn' },
+  ignorado_fora_da_janela:{ l: 'Aguardando decisão',  c: 'attn' },
+  estorno_recusado:       { l: 'Estorno recusado',    c: '' },
+  estorno_simulado:       { l: 'Simulação: teria estornado', c: 'primary' },
+  ignorado_data_invalida: { l: 'Data inválida',       c: '' },
+};
+const MOTIVO = {
+  valor_ok: 'PIX com valor correto',
+  manual: 'Liberação manual pelo painel',
+  valor_incorreto: 'Valor diferente do configurado',
+  dentro_da_janela: 'Máquina estava offline, dentro da janela',
+  fora_da_janela: 'Máquina estava offline, fora da janela',
+  sistema_pausado: 'Sistema estava pausado',
+  data_invalida: 'Data do pagamento ilegível',
+  autorizado_usuario: 'Autorizado por você no painel',
+  sem_cobertura: 'Anterior à memória de entregas',
+  multi_garrafoes: 'Venda multi-garrafão',
+};
+const LEGADO = { online_valor_incorreto:'valor_incorreto', offline_dentro_da_janela:'dentro_da_janela', sistema_desligado:'sistema_pausado', online:'valor_ok', offline:'fora_da_janela', manual_dash:'manual', verificacao:'valor_incorreto' };
+const ORIGEM = { online: 'Cliente na máquina', offline: 'Máquina estava offline', manual_dash: 'Manual pelo painel' };
+const NIVEL = { info:{t:'Info',c:'primary'}, warn:{t:'Alerta',c:'warn'}, warning:{t:'Alerta',c:'warn'}, error:{t:'Erro',c:'error'} };
+const ENDPOINT = { 'payments/search':'Consulta de pagamentos', refunds:'Estorno' };
+const TIPO_EV = { queda:{ic:'📡',t:'Ficou offline'}, sem_energia:{ic:'🔌',t:'Ficou sem energia'}, reinicio:{ic:'🔄',t:'Reiniciou'} };
+
+const isManual = t => t.origem === 'manual_dash' || String(t.id || '').startsWith('manual');
+const valorTx = t => isManual(t) ? 0 : (Number(t.valor) || 0);
+const quandoTx = t => toSec(t.data_pagamento_utc) || toSec(t.processado_em);
+const motivoTx = t => t.motivo_estorno || t.motivo || LEGADO[t.origem] || (t.status === 'ignorado_fora_da_janela' ? 'fora_da_janela' : '');
+const precisaDecisao = t => t.status === 'aguardando_autorizacao' || t.status === 'ignorado_fora_da_janela';
+const statusInfo = t => STATUS[t.status] || { l: t.status || '—', c: '' };
+
+// ================= ESTADO =================
+function novoEstado(){ return { status:{}, config:{}, comandos:{}, dev:{}, txRec:{}, txEsp:{}, tx:[], logsEsp:[], logsApi:[], conexao:[], ano:null, ok:{} }; }
+let S = novoEstado();
+const F = { busca:'', status:'todos', motivo:'todos', esp:'todos', api:'todos', hist:'todos', rel:new Set() };
+let offs = [], tickTimer = null, netTimer = null, anoTimer = null;
+let bombaDesde = null, bombaAnterior = null, cmd = null, esperaTempo = null, esperaRegras = null;
+let notifSessao = [], espOnlineAnterior = null, jaNotificadas = new Set(), sessaoInicio = agoraSec();
+let relatorio = [], relMeta = null;
+let ocultar = lsGet('va_ocultar', '0') === '1';
+
+function listen(query, nome, cb) {
+  const h = query.on('value',
+    snap => { S.ok[nome] = true; cb(snap.val()); },
+    err => { console.error(nome, err); toast(`Não foi possível ler ${nome}. ${msgErro(err)}`, 'error'); });
+  offs.push(() => query.off('value', h));
+}
+function ordenarLogs(v) {
+  return Object.entries(v || {})
+    .filter(([, l]) => l && typeof l === 'object')
+    .sort((a, b) => (toSec(b[1].timestamp) - toSec(a[1].timestamp)) || (a[0] < b[0] ? 1 : -1))
+    .map(([, l]) => l);
+}
+function juntarTx() {
+  const m = new Map();
+  const add = obj => { for (const [k, t] of Object.entries(obj || {})) if (t && typeof t === 'object') m.set(k, { ...t, id: t.id != null ? String(t.id) : k }); };
+  add(S.txRec);
+  for (const grupo of Object.values(S.txEsp)) add(grupo);
+  S.tx = [...m.values()].sort((a, b) => quandoTx(b) - quandoTx(a));
+  renderTxTudo();
+}
+
+function iniciarDados() {
+  pararDados();
+  listen(db.ref('.info/connected'), 'conexão', v => {
+    clearTimeout(netTimer);
+    if (v) $('#net-banner').hidden = true;
+    else netTimer = setTimeout(() => { $('#net-banner').hidden = false; }, 4000);
+  });
+  listen(db.ref(RAIZ + '/status'), 'status', v => { S.status = v || {}; trackBomba(); avancarCmd(); renderStatus(); renderConexao(); renderSeguranca(); });
+  listen(db.ref(RAIZ + '/config'), 'configurações', v => { S.config = v || {}; renderConfig(); renderRegras(); renderSeguranca(); renderStatus(); });
+  listen(db.ref(RAIZ + '/comandos'), 'comandos', v => { S.comandos = v || {}; avancarCmd(); });
+  listen(db.ref(RAIZ + '/developer'), 'atualização', v => { S.dev = v || {}; renderOta(); });
+
+  const desde = agoraSec() - DIAS_AO_VIVO * 86400;
+  listen(db.ref(RAIZ + '/transacoes').orderByChild('processado_em').startAt(desde), 'transações', v => { S.txRec = v || {}; juntarTx(); });
+  for (const st of ['aguardando_autorizacao', 'ignorado_fora_da_janela', 'estorno_pendente', 'estorno_falhou', 'estorno_simulado']) {
+    listen(db.ref(RAIZ + '/transacoes').orderByChild('status').equalTo(st), 'estornos', v => { S.txEsp[st] = v || {}; juntarTx(); });
+  }
+  listen(db.ref(RAIZ + '/logs/esp').limitToLast(150), 'logs da ESP', v => { S.logsEsp = ordenarLogs(v); renderLogsEsp(); renderNotificacoes(); });
+  listen(db.ref(RAIZ + '/logs/api').limitToLast(150), 'logs da API', v => { S.logsApi = ordenarLogs(v); renderLogsApi(); });
+  listen(db.ref(RAIZ + '/logs/conexao').limitToLast(200), 'histórico de conexão', v => { S.conexao = ordenarLogs(v); renderConexao(); renderNotificacoes(); });
+
+  carregarAno();
+  anoTimer = setInterval(carregarAno, 30 * 60 * 1000);
+}
+function pararDados() {
+  offs.forEach(f => f()); offs = [];
+  clearInterval(anoTimer); anoTimer = null;
+  S = novoEstado();
+  cmd = null; bombaDesde = null; bombaAnterior = null; notifSessao = []; jaNotificadas = new Set(); espOnlineAnterior = null;
+}
+
+async function carregarAno() {
+  try {
+    const ini = Math.floor(new Date(new Date().getFullYear(), 0, 1).getTime() / 1000);
+    const snap = await db.ref(RAIZ + '/transacoes').orderByChild('processado_em').startAt(ini - 86400).once('value');
+    let liq = 0, est = 0, n = 0;
+    snap.forEach(c => {
+      const v = c.val(); if (!v || typeof v !== 'object') return;
+      const t = { ...v, id: v.id != null ? String(v.id) : c.key };
+      if (quandoTx(t) < ini) return;
+      if (t.status === 'liberado' && !isManual(t)) { liq += valorTx(t); n++; }
+      if (t.status === 'estornado') est += Number(t.valor_estornado || t.valor) || 0;
+    });
+    S.ano = { liq, est, n };
+    renderDinheiro();
+  } catch (e) { console.warn('ano', e); }
+}
+
+// ================= STATUS =================
+function estadoEsp() {
+  if (!S.ok.status) return { cls:'wait', txt:'Conectando…', on:false, carregado:false, hb:0 };
+  const hb = toSec(S.status.ultimo_heartbeat);
+  const idade = hb ? agoraSec() - hb : Infinity;
+  const on = S.status.online === true && idade < OFFLINE_APOS_SEG;
+  return { on, hb, carregado:true, cls: on ? 'on' : 'off', txt: on ? 'Máquina online' : 'Máquina offline' };
+}
+const tempoBomba = () => Number(S.status.tempo_bomba_aplicado) || Number(S.config.tempo_bomba_seg) || 30;
+function trackBomba() {
+  const ativa = !!S.status.bomba_ativa;
+  if (ativa && bombaAnterior === false) bombaDesde = Date.now();
+  if (!ativa) bombaDesde = null;
+  bombaAnterior = ativa;
+}
+function textoRestante() {
+  if (!bombaDesde) return 'Em funcionamento';
+  const r = Math.ceil(tempoBomba() - (Date.now() - bombaDesde) / 1000);
+  return r > 0 ? `Desliga em ${r} s` : 'Desligando…';
+}
+function kpi(id, valor, sub, cls = '') {
+  const el = $('#k-' + id);
+  el.className = 'card kpi ' + cls;
+  $('.kpi-value', el).textContent = valor;
+  $('.kpi-sub', el).textContent = sub;
+}
+function forcaSinal(rssi) {
+  const r = Number(rssi);
+  if (!r) return '—';
+  const q = r > -60 ? 'Ótimo' : r > -70 ? 'Bom' : r > -80 ? 'Fraco' : 'Muito fraco';
+  return `${q} (${r} dBm)`;
+}
+function renderHeader() {
+  const e = estadoEsp();
+  $$('.esp-pill').forEach(p => { p.className = 'pill esp-pill ' + e.cls; $('.txt', p).textContent = e.txt; });
+}
+
+function renderStatus() {
+  renderHeader();
+  const e = estadoEsp(), s = S.status, c = S.config;
+
+  const banner = $('#offline-banner');
+  banner.hidden = !(e.carregado && !e.on);
+  if (!banner.hidden) $('#offline-txt').textContent = e.hb
+    ? `Último sinal ${relTime(e.hb)}. Ela tenta reconectar sozinha e reinicia se precisar.`
+    : 'Ainda não recebemos nenhum sinal dela.';
+
+  kpi('esp', e.carregado ? (e.on ? 'Online' : 'Offline') : '—', e.hb ? `Último sinal: ${relTime(e.hb)}` : 'Aguardando sinal', e.carregado ? (e.on ? 'good' : 'bad') : '');
+  const ligada = !!s.bomba_ativa;
+  kpi('bomba', !e.carregado ? '—' : ligada ? 'Ligada' : 'Desligada', ligada ? textoRestante() : 'Pronta para liberar', ligada ? 'good' : '');
+  const pausado = c.ligado === false;
+  kpi('sistema', !S.ok['configurações'] ? '—' : pausado ? 'Pausado' : 'Ativo',
+      pausado ? (c.estorno_auto_sistema_pausado === false ? 'PIX aguardam decisão' : 'PIX recebidos são estornados') : 'Aceitando pagamentos',
+      !S.ok['configurações'] ? '' : pausado ? 'warn' : 'good');
+  kpi('valor', c.valor != null ? brl(c.valor) : '—', 'por liberação');
+  kpi('tempo', c.tempo_bomba_seg != null ? `${c.tempo_bomba_seg} s` : '—', 'de água por liberação');
+
+  const heap = Number(s.heap_livre), bloco = Number(s.heap_bloco_max);
+  $('#h-uptime').textContent = s.uptime_seg != null ? duracao(s.uptime_seg) : '—';
+  $('#h-sinal').textContent = relTime(e.hb);
+  $('#h-rssi').textContent = forcaSinal(s.rssi);
+  $('#h-heap').textContent = heap ? `${Math.round(heap / 1024)} KB` : '—';
+  $('#h-bloco').textContent = bloco ? `${Math.round(bloco / 1024)} KB` : '—';
+  $('#h-versao').textContent = s.versao || '—';
+  const hEl = $('#h-estado');
+  if (!heap) { hEl.className = 'badge'; hEl.textContent = 'Sem dados'; }
+  else if (heap < HEAP_MIN || (bloco && bloco < BLOCO_MIN)) { hEl.className = 'badge warn'; hEl.textContent = 'Memória baixa'; }
+  else { hEl.className = 'badge success'; hEl.textContent = 'Saudável'; }
+
+  renderBomba();
+  if (typeof window.__mgUpdate === 'function') window.__mgUpdate();
+}
+
+// ================= LINHAS DE TRANSAÇÃO =================
+function linhaDet(rot, valor) { return valor ? `<div><span>${esc(rot)}</span><b>${esc(valor)}</b></div>` : ''; }
+
+function txRow(t, opts = {}) {
+  const st = statusInfo(t), mot = motivoTx(t), manual = isManual(t);
+  const atraso = Number(t.minutos_atraso) > 0 ? ` · ${t.minutos_atraso} min de atraso` : '';
+  const acoes = [];
+  if (precisaDecisao(t)) {
+    acoes.push(`<button class="btn btn-sm btn-warn" data-acao="autorizar" data-id="${esc(t.id)}">↩️ Autorizar estorno</button>`);
+    acoes.push(`<button class="btn btn-sm btn-ghost" data-acao="recusar" data-id="${esc(t.id)}">Recusar</button>`);
+  }
+  if (t.status === 'estorno_falhou') acoes.push(`<button class="btn btn-sm btn-primary" data-acao="repetir" data-id="${esc(t.id)}">Tentar de novo</button>`);
+  if (t.status === 'estorno_simulado') {
+    acoes.push(`<button class="btn btn-sm btn-warn" data-acao="autorizar" data-id="${esc(t.id)}">↩️ Estornar de verdade</button>`);
+    acoes.push(`<button class="btn btn-sm btn-ghost" data-acao="recusar" data-id="${esc(t.id)}">Descartar</button>`);
+  }
+  const det = `<div class="det">
+    ${linhaDet('Pago em', fmtData(t.data_pagamento_utc))}
+    ${linhaDet('Processado em', fmtData(t.processado_em))}
+    ${linhaDet('Motivo', MOTIVO[mot] || mot)}
+    ${linhaDet('Origem', ORIGEM[t.origem] || t.origem)}
+    ${linhaDet('Garrafões', t.garrafoes != null ? String(t.garrafoes) : '')}
+    ${linhaDet('Valor esperado', t.valor_esperado != null ? brl(t.valor_esperado) : '')}
+    ${linhaDet('Estornado em', fmtData(t.estornado_em) !== '—' ? fmtData(t.estornado_em) : '')}
+    ${linhaDet('Valor estornado', t.valor_estornado != null ? brl(t.valor_estornado) : '')}
+    ${linhaDet('Autorizado por', t.autorizado_por ? `${t.autorizado_por} · ${fmtCurta(t.autorizado_em)}` : '')}
+    ${linhaDet('Recusado por', t.recusado_por ? `${t.recusado_por} · ${fmtCurta(t.recusado_em)}` : '')}
+    ${linhaDet('Tentativas de estorno', t.tentativas ? String(t.tentativas) : '')}
+    ${linhaDet('Último erro', t.ultimo_erro || '')}
+    ${linhaDet('ID do estorno (MP)', t.refund_id || '')}
+    ${linhaDet('Observação', t.obs || '')}
+    ${acoes.length && opts.acoes !== false ? `<div class="acoes">${acoes.join('')}</div>` : ''}
+  </div>`;
+  const ICONE = {
+    liberado: ['💧', 'pos'], estornado: ['↩️', 'warn'], estorno_pendente: ['⏳', 'primary'],
+    estorno_falhou: ['⚠️', 'neg'], aguardando_autorizacao: ['🔔', 'attn'], ignorado_fora_da_janela: ['🔔', 'attn'],
+    estorno_recusado: ['🚫', ''], estorno_simulado: ['🧪', 'primary'], ignorado_data_invalida: ['❔', ''],
+  };
+  const TITULO = {
+    liberado: 'PIX recebido', estornado: 'Estorno feito', estorno_pendente: 'Estorno em andamento',
+    estorno_falhou: 'Estorno falhou', aguardando_autorizacao: 'Aguardando sua decisão',
+    ignorado_fora_da_janela: 'Aguardando sua decisão', estorno_recusado: 'Estorno recusado',
+    estorno_simulado: 'Simulação de estorno', ignorado_data_invalida: 'Pagamento ignorado',
+  };
+  const CURTO = {
+    valor_incorreto: 'valor diferente', dentro_da_janela: 'offline, na janela', fora_da_janela: 'offline, atrasado',
+    sistema_pausado: 'sistema pausado', sem_cobertura: 'sem prova de entrega', autorizado_usuario: 'você autorizou',
+    data_invalida: 'data ilegível', multi_garrafoes: 'multi-garrafão',
+  };
+  const [ic, cor] = ICONE[t.status] || ['•', ''];
+  const sinal = t.status === 'liberado' && !manual ? 'pos' : (t.status === 'estornado' ? 'neg' : '');
+  const prefixo = t.status === 'liberado' && !manual ? '+ ' : (t.status === 'estornado' ? '− ' : '');
+  const titulo = manual ? 'Liberação manual' : (TITULO[t.status] || 'Pagamento');
+  const garraf = Number(t.garrafoes) > 1 ? ` · 🧴 ${t.garrafoes}` : '';
+  const extra = CURTO[mot] && t.status !== 'liberado' ? ` · ${CURTO[mot]}` : '';
+  return `<li class="row tx${opts.aberto ? ' open' : ''}" data-tx="${esc(t.id)}">
+    <span class="ic-circle ${cor}">${ic}</span>
+    <div class="row-main">
+      <div class="row-title">${esc(titulo)}</div>
+      <div class="row-meta">${fmtCurta(quandoTx(t))}${esc(extra)}${manual ? '' : ' · #' + esc(t.id)}${esc(garraf)}${esc(atraso)}</div>
+    </div>
+    <div class="row-end"><span class="row-val ${sinal}">${manual ? '—' : prefixo + brl(t.valor)}</span><span class="badge ${st.c}">${esc(st.l)}</span></div>
+    ${det}
+  </li>`;
+}
+
+function renderTxTudo() {
+  renderResumoGeral();
+  renderTx();
+  renderEstornos();
+  renderDinheiro();
+  renderNotificacoes();
+  renderBadges();
+  if (typeof window.__mgUpdate === 'function') window.__mgUpdate();
+}
+
+// ================= VISÃO GERAL =================
+function mascara(v) { return ocultar ? 'R$ •••••' : brl(v); }
+
+function renderDinheiro() {
+  const hoje = dayKey(agoraSec()), mes = hoje.slice(0, 7);
+  let d = 0, dn = 0, m = 0, mn = 0, est = 0;
+  for (const t of S.tx) {
+    const k = dayKey(quandoTx(t));
+    if (t.status === 'liberado' && !isManual(t)) {
+      if (k === hoje) { d += valorTx(t); dn++; }
+      if (k.startsWith(mes)) { m += valorTx(t); mn++; }
+    }
+    if (t.status === 'estornado' && dayKey(toSec(t.estornado_em) || quandoTx(t)).startsWith(mes)) est += Number(t.valor_estornado || t.valor) || 0;
+  }
+  $('#cash-hoje').textContent = mascara(d);
+  $('#cash-hoje-s').textContent = `${dn} PIX liberado${dn === 1 ? '' : 's'}`;
+  $('#cash-mes').textContent = mascara(m);
+  $('#cash-mes-s').textContent = `${mn} PIX no mês`;
+  $('#cash-ano').textContent = S.ano ? mascara(S.ano.liq) : '…';
+  $('#cash-ano-s').textContent = S.ano ? `${S.ano.n} PIX no ano` : 'calculando…';
+  $('#cash-est').textContent = `Estornado no mês: ${mascara(est)}`;
+  $('#cash-liq').textContent = `Líquido do mês: ${mascara(m)}`;
+  $('#olho-ic').textContent = ocultar ? '🙈' : '👁️';
+  $('#olho-txt').textContent = ocultar ? 'Mostrar' : 'Ocultar';
+  $('#btn-olho').setAttribute('aria-pressed', ocultar ? 'true' : 'false');
+}
+
+function renderResumoGeral() {
+  const hoje = dayKey(agoraSec());
+  const libs = S.tx.filter(t => t.status === 'liberado' && dayKey(quandoTx(t)) === hoje);
+  kpi('hoje', S.ok['transações'] ? String(libs.length) : '—', `${mascara(libs.filter(t => !isManual(t)).reduce((a, t) => a + valorTx(t), 0))} recebidos`);
+
+  $('#recentes').innerHTML = S.tx.length
+    ? S.tx.slice(0, 5).map(t => txRow(t, { acoes:false })).join('')
+    : `<li class="empty">${S.ok['transações'] ? 'Nenhuma transação ainda.' : 'Carregando…'}</li>`;
+
+  const pend = S.tx.filter(precisaDecisao).length;
+  $('#decisao-banner').hidden = pend === 0;
+  $('#decisao-txt').textContent = `${pend} PIX ${pend === 1 ? 'aguarda' : 'aguardam'} a sua decisão de estorno.`;
+
+  const dias = [];
+  for (let i = 6; i >= 0; i--) {
+    const ms = Date.now() - i * 864e5, dt = new Date(ms);
+    dias.push({ k: dayKey(ms / 1000),
+      sem: dt.toLocaleDateString('pt-BR', { timeZone: TZ, weekday:'short' }).replace('.', ''),
+      dia: dt.toLocaleDateString('pt-BR', { timeZone: TZ, day:'2-digit', month:'2-digit' }),
+      lib: 0, est: 0, out: 0 });
+  }
+  const idx = Object.fromEntries(dias.map((d, i) => [d.k, i]));
+  for (const t of S.tx) {
+    const i = idx[dayKey(quandoTx(t))];
+    if (i == null) continue;
+    if (t.status === 'liberado') dias[i].lib++;
+    else if (t.status === 'estornado') dias[i].est++;
+    else dias[i].out++;
+  }
+  const max = Math.max(1, ...dias.map(d => d.lib + d.est + d.out));
+  const seg = (n, cor) => n ? `<span style="flex:${n};background:var(--${cor})"></span>` : '';
+  $('#chart').innerHTML = dias.map(d => {
+    const tot = d.lib + d.est + d.out;
+    const h = tot ? Math.max(8, Math.round(tot / max * 122)) : 3;
+    return `<div class="bar-col">
+      <div class="bar-area">
+        <span class="bar-num">${tot || ''}</span>
+        <div class="bar-stack" style="height:${h}px">${seg(d.lib, 'pos')}${seg(d.est, 'warn')}${seg(d.out, 'ink-3')}</div>
+      </div>
+      <div class="bar-lbl"><b>${esc(d.sem)}</b><br>${esc(d.dia)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderTx() {
+  const q = F.busca.trim().toLowerCase();
+  const arr = S.tx.filter(t => {
+    if (F.status !== 'todos' && t.status !== F.status) return false;
+    if (F.motivo !== 'todos' && motivoTx(t) !== F.motivo) return false;
+    if (q && !String(t.id).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const lib = arr.filter(t => t.status === 'liberado' && !isManual(t));
+  const est = arr.filter(t => t.status === 'estornado');
+  $('#s-lib').textContent = lib.length;
+  $('#s-lib-v').textContent = brl(lib.reduce((a, t) => a + valorTx(t), 0));
+  $('#s-est').textContent = est.length;
+  $('#s-est-v').textContent = brl(est.reduce((a, t) => a + (Number(t.valor_estornado || t.valor) || 0), 0));
+  $('#s-out').textContent = arr.length - lib.length - est.length;
+  $('#tx-count').textContent = arr.length ? `${arr.length} registro${arr.length === 1 ? '' : 's'}` : '';
+  $('#tx-list').innerHTML = arr.length
+    ? arr.map(t => txRow(t)).join('')
+    : `<li class="empty">${S.ok['transações'] ? 'Nada encontrado com esses filtros.' : 'Carregando…'}</li>`;
+}
+
+// ================= ESTORNOS =================
+function renderEstornos() {
+  const sim = S.tx.filter(t => t.status === 'estorno_simulado');
+  $('#card-simulados').hidden = sim.length === 0;
+  $('#simulado-list').innerHTML = sim.length ? sim.map(t => txRow(t)).join('') : '';
+
+  const dec = S.tx.filter(precisaDecisao);
+  $('#decisao-list').innerHTML = dec.length ? dec.map(t => txRow(t)).join('') : `<li class="empty">Nenhum PIX aguardando decisão. 🎉</li>`;
+
+  const and = S.tx.filter(t => t.status === 'estorno_pendente' || t.status === 'estorno_falhou' || t.status === 'estorno_recusado');
+  $('#andamento-list').innerHTML = and.length ? and.map(t => txRow(t)).join('') : `<li class="empty">Nenhum estorno em andamento.</li>`;
+
+  const freio = S.status.freio_ativo === true;
+  $('#freio-banner').hidden = !freio;
+  if (freio) $('#freio-txt').textContent = `Freio ativado: ${S.status.freio_motivo || 'motivo não informado'}. Nenhum estorno automático será feito.`;
+
+  $('#sim-banner').hidden = S.config.modo_simulacao !== true;
+
+  const hist = S.tx.filter(t => {
+    if (t.status !== 'estornado' && t.status !== 'estorno_recusado' && t.status !== 'estorno_falhou') return false;
+    if (F.hist === 'todos') return true;
+    return motivoTx(t) === F.hist || (F.hist === 'autorizado_usuario' && t.autorizado_por);
+  });
+  $('#hist-list').innerHTML = hist.length ? hist.slice(0, 60).map(t => txRow(t)).join('') : `<li class="empty">Nenhum estorno registrado.</li>`;
+
+  const sh = $('#sg-hora'), sd = $('#sg-dia'), sc = $('#sg-cobertura');
+  if (sh) sh.textContent = S.status.estornos_hora != null ? String(S.status.estornos_hora) : '—';
+  if (sd) sd.textContent = S.status.estornos_dia != null ? String(S.status.estornos_dia) : '—';
+  if (sc) sc.textContent = S.status.cobertura_desde ? fmtCurta(S.status.cobertura_desde) : '—';
+}
+
+// ================= NOTIFICAÇÕES =================
+function renderNotificacoes() {
+  const novas = [];
+  const on = estadoEsp().on;
+  if (espOnlineAnterior === true && on === false) novas.push({ ic: '📡', t: 'Máquina ficou offline', s: 'O painel vai tentar reconectar automaticamente.' });
+  espOnlineAnterior = on;
+
+  for (const l of S.logsEsp.slice(0, 10)) {
+    if (l.nivel !== 'error' && l.nivel !== 'warn' && l.nivel !== 'warning') continue;
+    const id = 'esp:' + (l.timestamp || '') + ':' + (l.mensagem || '').slice(0, 40);
+    if (jaNotificadas.has(id)) continue;
+    jaNotificadas.add(id);
+    novas.push({ ic: '📝', t: l.nivel === 'error' ? 'Erro na máquina' : 'Aviso na máquina', s: String(l.mensagem || '').slice(0, 140) });
+  }
+  for (const t of S.tx.filter(precisaDecisao).slice(0, 5)) {
+    const id = 'dec:' + t.id;
+    if (jaNotificadas.has(id)) continue;
+    jaNotificadas.add(id);
+    novas.push({ ic: '🔔', t: 'PIX aguardando decisão', s: `#${t.id} · ${brl(t.valor)}` });
+  }
+  for (const n of novas) notifSessao.unshift(n);
+  notifSessao = notifSessao.slice(0, 40);
+
+  const naoLidas = notifSessao.filter(n => !n.lida).length;
+  $('#bell-count').hidden = naoLidas === 0;
+  $('#bell-count').textContent = String(naoLidas);
+  $('#np-list').innerHTML = notifSessao.length
+    ? notifSessao.map(n => `<li class="np-item${n.lida ? '' : ' nova'}"><span class="np-ic">${n.ic}</span><div style="min-width:0"><div class="np-t">${esc(n.t)}</div><div class="np-s">${esc(n.s)}</div></div></li>`).join('')
+    : `<li class="empty">Sem notificações.</li>`;
+
+  if (novas.length) novas.slice(0, 2).forEach(n => toast(`${n.ic} ${n.t}`, ''));
+}
+
+function renderBadges() {
+  const pend = S.tx.filter(precisaDecisao).length;
+  const nb = $('#nb-estornos'), tb = $('#tb-estornos');
+  if (nb) { nb.hidden = pend === 0; nb.textContent = String(pend); }
+  if (tb) { tb.hidden = pend === 0; tb.textContent = String(pend); }
+}
+
+// ================= BOMBA =================
+function renderBomba() {
+  const e = estadoEsp();
+  const ligada = !!S.status.bomba_ativa;
+  const orb = $('#orb');
+  orb.className = 'orb' + (ligada ? ' on' : '');
+  $('#orb-main').textContent = ligada ? 'Ligada' : (e.carregado ? 'Desligada' : '…');
+  $('#orb-sub').textContent = ligada ? textoRestante() : (e.carregado ? 'Pronta' : '');
+  $('#bomba-info').textContent = ligada
+    ? `A água está saindo. Tempo configurado: ${tempoBomba()} s.`
+    : `Tempo configurado: ${tempoBomba()} s por liberação.`;
+  $('#bomba-aviso').hidden = e.on || !e.carregado;
+  $('#btn-ligar').disabled = ligada;
+  $('#btn-desligar').disabled = !ligada;
+}
+
+$('#btn-ligar')?.addEventListener('click', async () => {
+  const ok = await pedirSenha('Ligar a bomba?', 'Isso libera água sem pagamento. Digite a sua senha para confirmar.', 'Ligar');
+  if (!ok) return;
+  iniciarCmd('ligar_bomba', { ligar_bomba: true, ligar_bomba_por: (auth.currentUser?.email || 'painel') });
+});
+$('#btn-desligar')?.addEventListener('click', async () => {
+  const ok = await confirmar('Desligar a bomba?', 'A água para imediatamente.', 'Desligar', true);
+  if (!ok) return;
+  iniciarCmd('desligar_bomba', { desligar_bomba: true });
+});
+$('#btn-cancelar-fila')?.addEventListener('click', async () => {
+  const ok = await confirmar('Cancelar fila multi-garrafão?', 'Os garrafões restantes não serão liberados. A bomba atual continua até o fim do ciclo.', 'Cancelar fila', true);
+  if (!ok) return;
+  await db.ref(RAIZ + '/comandos').update({ cancelar_fila: true });
+  toast('Pedido de cancelamento enviado.', 'success');
+});
+
+function iniciarCmd(tipo, dados) {
+  cmd = { tipo, inicio: Date.now(), dados };
+  $('#cmd-empty').hidden = true;
+  $('#cmd-box').hidden = false;
+  $('#cmd-cancel').hidden = false;
+  $('#cmd-msg').textContent = '';
+  $('#cmd-msg').className = 'fb';
+  renderCmd();
+  db.ref(RAIZ + '/comandos').update(dados).catch(err => {
+    $('#cmd-msg').className = 'fb error';
+    $('#cmd-msg').textContent = `Falha ao enviar: ${msgErro(err)}`;
+  });
+  clearTimeout(cmd.timer);
+  cmd.timer = setTimeout(() => {
+    if (!cmd) return;
+    cmd.timeout = true;
+    renderCmd();
+  }, CMD_TIMEOUT_MS);
+}
+
+function renderCmd() {
+  if (!cmd) return;
+  const agora = Date.now();
+  const decorrido = (agora - cmd.inicio) / 1000;
+  const titulo = cmd.tipo === 'ligar_bomba' ? 'Ligar bomba' : cmd.tipo === 'desligar_bomba' ? 'Desligar bomba' : 'Comando';
+  $('#cmd-title').textContent = titulo;
+  const online = estadoEsp().on;
+  const recebeu = cmd.dados.ligar_bomba
+    ? (online && S.status.bomba_ativa === true)
+    : (online && S.status.bomba_ativa === false);
+  const timeout = cmd.timeout;
+  const steps = [
+    { t: 'Enviado ao Firebase', ok: true, now: false },
+    { t: 'Máquina online', ok: online, now: false, late: !online && decorrido > 3 && !timeout },
+    { t: 'Executado', ok: recebeu, now: !recebeu && !timeout, late: !recebeu && timeout },
+    { t: 'Confirmado no status', ok: recebeu, now: false },
+  ];
+  $('#cmd-steps').innerHTML = steps.map(s => {
+    let cls = 'step';
+    let ic = '•';
+    if (s.ok) { cls += ' done'; ic = '✓'; }
+    else if (s.now) { cls += ' now'; ic = '•'; }
+    else if (s.late) { cls += ' late'; ic = '⏳'; }
+    if (timeout && !s.ok) { cls += ' fail'; ic = '✕'; }
+    return `<li class="${cls}"><span class="ic">${ic}</span>${esc(s.t)}</li>`;
+  }).join('');
+  const msg = $('#cmd-msg');
+  if (recebeu) { msg.className = 'fb ok'; msg.textContent = 'Comando executado.'; }
+  else if (timeout) { msg.className = 'fb error'; msg.textContent = 'A máquina não respondeu. Verifique a conexão.'; }
+  else { msg.className = 'fb pending'; msg.textContent = 'Aguardando confirmação…'; }
+}
+
+function avancarCmd() {
+  if (!cmd) return;
+  const online = estadoEsp().on;
+  const ok = cmd.dados.ligar_bomba ? (online && S.status.bomba_ativa === true) : (online && S.status.bomba_ativa === false);
+  if (ok) {
+    clearTimeout(cmd.timer);
+    cmd.concluido = true;
+    renderCmd();
+    setTimeout(() => { cmd = null; $('#cmd-box').hidden = true; $('#cmd-empty').hidden = false; }, 1800);
+  } else renderCmd();
+}
+$('#cmd-cancel')?.addEventListener('click', () => { clearTimeout(cmd?.timer); cmd = null; $('#cmd-box').hidden = true; $('#cmd-empty').hidden = false; });
+
+// ================= CONFIGURAÇÕES =================
+function renderConfig() {
+  const c = S.config;
+  const lig = c.ligado !== false;
+  $('#cfg-ligado').checked = lig;
+  $('#cfg-ligado-txt').textContent = lig ? 'Aceitando pagamentos' : 'Pausado — novos PIX serão tratados conforme regras';
+  $('#cfg-valor-atual').textContent = c.valor != null ? brl(c.valor) : '—';
+  $('#cfg-tempo-atual').textContent = c.tempo_bomba_seg != null ? `${c.tempo_bomba_seg} s` : '—';
+  if (!esperaTempo) {
+    $('#cfg-tempo').value = c.tempo_bomba_seg ?? 30;
+    $('#cfg-tempo-range').value = c.tempo_bomba_seg ?? 30;
+  }
+  $$('#tempo-presets .chip').forEach(ch => ch.classList.toggle('active', Number(ch.dataset.v) === Number(c.tempo_bomba_seg)));
+}
+
+$('#cfg-ligado')?.addEventListener('change', async e => {
+  const ligado = e.target.checked;
+  try {
+    await db.ref(RAIZ + '/config').update({ ligado });
+    fb($('#fb-ligado'), 'ok', 'Salvo.');
+    setTimeout(() => fb($('#fb-ligado'), '', ''), 2500);
+  } catch (err) { fb($('#fb-ligado'), 'error', msgErro(err)); }
+});
+
+$('#form-valor')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const v = Number(String($('#cfg-valor').value).replace(',', '.'));
+  if (!v || v <= 0) { fb($('#fb-valor'), 'error', 'Informe um valor válido.'); return; }
+  try {
+    await db.ref(RAIZ + '/config').update({ valor: v });
+    fb($('#fb-valor'), 'ok', 'Salvo.');
+    $('#cfg-valor').value = '';
+    setTimeout(() => fb($('#fb-valor'), '', ''), 2500);
+  } catch (err) { fb($('#fb-valor'), 'error', msgErro(err)); }
+});
+
+function sincronizarTempo() {
+  const v = Number($('#cfg-tempo').value || 30);
+  $('#cfg-tempo-range').value = v;
+  $$('#tempo-presets .chip').forEach(ch => ch.classList.toggle('active', Number(ch.dataset.v) === v));
+}
+$('#cfg-tempo-range')?.addEventListener('input', e => { esperaTempo = true; $('#cfg-tempo').value = e.target.value; sincronizarTempo(); });
+$('#cfg-tempo')?.addEventListener('input', sincronizarTempo);
+$$('#tempo-presets .chip').forEach(ch => ch.addEventListener('click', () => {
+  esperaTempo = true;
+  $('#cfg-tempo').value = ch.dataset.v;
+  $('#cfg-tempo-range').value = ch.dataset.v;
+  sincronizarTempo();
+}));
+$('#form-tempo')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const v = Math.max(5, Math.min(300, Number($('#cfg-tempo').value || 30)));
+  try {
+    await db.ref(RAIZ + '/config').update({ tempo_bomba_seg: v });
+    esperaTempo = false;
+    fb($('#fb-tempo'), 'ok', 'Salvo.');
+    setTimeout(() => fb($('#fb-tempo'), '', ''), 2500);
+  } catch (err) { fb($('#fb-tempo'), 'error', msgErro(err)); }
+});
+
+// ================= REGRAS / SEGURANÇA =================
+function renderRegras() {
+  const c = S.config;
+  if (esperaRegras) return;
+  $('#r-liberar').value = c.liberar_ate_seg ?? 120;
+  $('#r-liberar-range').value = c.liberar_ate_seg ?? 120;
+  $('#r-janela').value = c.janela_estorno_min ?? 10;
+  $('#r-janela-range').value = c.janela_estorno_min ?? 10;
+  $('#r-liberar-voltar').checked = c.liberar_apos_voltar === true;
+  $('#r-auto-valor').checked = c.estorno_auto_valor_incorreto !== false;
+  $('#r-auto-pausado').checked = c.estorno_auto_sistema_pausado !== false;
+  $('#rg1').textContent = `💧 Liberar água se o PIX chegar em até ${c.liberar_ate_seg ?? 120} s da máquina.`;
+  $('#rg2').textContent = `↩️ Estornar sozinho dentro de ${c.janela_estorno_min ?? 10} min quando o PIX veio com a máquina offline (e sem prova de entrega).`;
+  $('#rg3').textContent = c.liberar_apos_voltar ? '✅ PIX pagos com a máquina offline podem liberar água ao voltar.' : '🚫 PIX pagos com a máquina offline nunca liberam água — só estorno.';
+  $('#rg4').textContent = c.estorno_auto_valor_incorreto !== false ? '↩️ Valor diferente do configurado é estornado automaticamente.' : '🔔 Valor diferente do configurado fica aguardando sua decisão.';
+  $('#rg5').textContent = c.estorno_auto_sistema_pausado !== false ? '↩️ PIX com sistema pausado são estornados automaticamente.' : '🔔 PIX com sistema pausado ficam aguardando sua decisão.';
+}
+
+$('#r-liberar-range')?.addEventListener('input', e => { esperaRegras = true; $('#r-liberar').value = e.target.value; });
+$('#r-janela-range')?.addEventListener('input', e => { esperaRegras = true; $('#r-janela').value = e.target.value; });
+$('#form-regras')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const dados = {
+    liberar_ate_seg: Math.max(30, Math.min(900, Number($('#r-liberar').value || 120))),
+    janela_estorno_min: Math.max(1, Math.min(240, Number($('#r-janela').value || 10))),
+    liberar_apos_voltar: $('#r-liberar-voltar').checked,
+    estorno_auto_valor_incorreto: $('#r-auto-valor').checked,
+    estorno_auto_sistema_pausado: $('#r-auto-pausado').checked,
+  };
+  try {
+    await db.ref(RAIZ + '/config').update(dados);
+    esperaRegras = false;
+    fb($('#fb-regras'), 'ok', 'Regras salvas.');
+    setTimeout(() => fb($('#fb-regras'), '', ''), 2500);
+  } catch (err) { fb($('#fb-regras'), 'error', msgErro(err)); }
+});
+
+function renderSeguranca() {
+  const c = S.config;
+  $('#s-simulacao').checked = c.modo_simulacao === true;
+  if (!esperaRegras) {
+    $('#s-hora').value = c.max_estornos_hora ?? 3;
+    $('#s-dia').value = c.max_estornos_dia ?? 10;
+    $('#s-pausa').value = c.pausa_apos_entrega_seg ?? 90;
+    $('#s-percent').value = c.percentual_max_estorno ?? 20;
+  }
+  $('#sg1').textContent = `🛑 No máximo ${c.max_estornos_hora ?? 3} estornos por hora e ${c.max_estornos_dia ?? 10} por dia.`;
+  $('#sg2').textContent = `⏸️ Pausa de ${c.pausa_apos_entrega_seg ?? 90} s após cada liberação; freio se passar de ${c.percentual_max_estorno ?? 20}% de estornos no dia.`;
+}
+$('#s-simulacao')?.addEventListener('change', async e => {
+  try { await db.ref(RAIZ + '/config').update({ modo_simulacao: e.target.checked }); toast('Modo simulação atualizado.', 'success'); }
+  catch (err) { toast(msgErro(err), 'error'); }
+});
+$('#form-seguranca')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const dados = {
+    max_estornos_hora: Math.max(1, Math.min(100, Number($('#s-hora').value || 3))),
+    max_estornos_dia: Math.max(1, Math.min(500, Number($('#s-dia').value || 10))),
+    pausa_apos_entrega_seg: Math.max(0, Math.min(600, Number($('#s-pausa').value || 90))),
+    percentual_max_estorno: Math.max(5, Math.min(100, Number($('#s-percent').value || 20))),
+  };
+  try {
+    await db.ref(RAIZ + '/config').update(dados);
+    esperaRegras = false;
+    fb($('#fb-seguranca'), 'ok', 'Segurança salva.');
+    setTimeout(() => fb($('#fb-seguranca'), '', ''), 2500);
+  } catch (err) { fb($('#fb-seguranca'), 'error', msgErro(err)); }
+});
+
+$('#btn-freio')?.addEventListener('click', async () => {
+  const ok = await confirmar('Reativar estornos automáticos?', 'O freio será solto e a máquina voltará a estornar sozinha.', 'Reativar');
+  if (!ok) return;
+  await db.ref(RAIZ + '/comandos').update({ reativar_freio: true, reativar_freio_por: (auth.currentUser?.email || 'painel') });
+  toast('Pedido enviado.', 'success');
+});
+
+// ================= LOGS =================
+function renderLogsEsp() {
+  const arr = S.logsEsp.filter(l => {
+    if (F.esp === 'todos') return true;
+    if (F.esp === 'warn') return l.nivel === 'warn' || l.nivel === 'warning';
+    return l.nivel === F.esp;
+  });
+  $('#esp-list').innerHTML = arr.length ? arr.map(l => {
+    const n = NIVEL[l.nivel] || { t: l.nivel || '—', c: '' };
+    return `<li class="row log" data-log><span class="ic-circle ${n.c}">${n.c === 'error' ? '⚠️' : n.c === 'warn' ? '🔔' : 'ℹ️'}</span>
+      <div class="row-main"><div class="row-title clamp">${esc(l.mensagem || '—')}</div><div class="row-meta">${fmtData(l.timestamp)} · ${esc(n.t)}</div></div></li>`;
+  }).join('') : `<li class="empty">Sem eventos.</li>`;
+}
+function renderLogsApi() {
+  const arr = S.logsApi.filter(l => F.api === 'todos' || l.endpoint === F.api);
+  $('#api-list').innerHTML = arr.length ? arr.map(l => {
+    const c = l.http_code >= 500 ? 'error' : 'warn';
+    return `<li class="row log" data-log><span class="ic-circle ${c}">🌐</span>
+      <div class="row-main"><div class="row-title clamp">${esc(ENDPOINT[l.endpoint] || l.endpoint || '—')} · HTTP ${esc(l.http_code)}</div>
+      <div class="row-meta">${fmtData(l.timestamp)} · ${esc(String(l.detalhe || '').slice(0, 160))}</div></div></li>`;
+  }).join('') : `<li class="empty">Sem falhas.</li>`;
+}
+
+// ================= CONEXÃO =================
+function renderConexao() {
+  const e = estadoEsp(), s = S.status;
+  $('#cx-estado').textContent = e.carregado ? (e.on ? 'Online' : 'Offline') : '—';
+  $('#cx-rssi').textContent = forcaSinal(s.rssi);
+  $('#cx-ip').textContent = s.ip || '—';
+  const sete = agoraSec() - 7 * 86400;
+  const arr = S.conexao.filter(ev => (toSec(ev.fim) || toSec(ev.timestamp)) >= sete);
+  let quedas = 0, tempoOff = 0, reinicios = 0, energia = 0;
+  for (const ev of arr) {
+    if (ev.tipo === 'queda') { quedas++; tempoOff += Number(ev.duracao_seg) || 0; }
+    if (ev.tipo === 'reinicio') reinicios++;
+    if (ev.tipo === 'sem_energia') energia++;
+  }
+  $('#cx-quedas').textContent = String(quedas);
+  $('#cx-tempo').textContent = duracao(tempoOff);
+  $('#cx-reinicios').textContent = String(reinicios);
+  $('#cx-energia').textContent = String(energia);
+  $('#cx-list').innerHTML = S.conexao.length ? S.conexao.slice(0, 100).map(ev => {
+    const t = TIPO_EV[ev.tipo] || { ic: '📡', t: ev.tipo || '—' };
+    const dur = ev.duracao_seg != null ? ` · ${duracao(ev.duracao_seg)}` : '';
+    return `<li class="row"><span class="ic-circle">${t.ic}</span>
+      <div class="row-main"><div class="row-title">${esc(t.t)}${esc(dur)}</div>
+      <div class="row-meta">${fmtCurta(ev.inicio || ev.timestamp)}${ev.motivo ? ' · ' + esc(ev.motivo) : ''}</div></div></li>`;
+  }).join('') : `<li class="empty">Sem eventos.</li>`;
+}
+
+// ================= OTA =================
+function renderOta() {
+  const d = S.dev;
+  const status = d.status || '';
+  const pedido = d.atualizar === true;
+  const badge = $('#ota-badge');
+  const map = {
+    'baixando': ['Baixando', 'primary'],
+    'sucesso - reiniciando': ['Sucesso', 'success'],
+    'sem novidade': ['Sem novidade', ''],
+  };
+  let bt = map[status] || (status.startsWith('erro') ? ['Erro', 'error'] : ['—', '']);
+  if (pedido) bt = ['Aguardando', 'primary'];
+  badge.className = 'badge ' + bt[1];
+  badge.textContent = bt[0];
+  $('#ota-versao').textContent = S.status.versao || '—';
+  $('#ota-url-atual').textContent = d.firmware_url || '—';
+  $('#ota-quando').textContent = d.ultima_atualizacao ? `Atualizado em ${fmtData(d.ultima_atualizacao)}` : '—';
+  $('#ota-msg').className = 'fb ' + (status.startsWith('erro') ? 'error' : status === 'sucesso - reiniciando' ? 'ok' : 'pending');
+  $('#ota-msg').textContent = status ? `Status: ${status}` : '';
+  $('#ota-cancel').hidden = !pedido;
+  $('#ota-empty').hidden = !!status || pedido;
+  $('#ota-steps').innerHTML = !status && !pedido ? '' : `
+    <li class="step ${pedido ? 'now' : 'done'}"><span class="ic">${pedido ? '•' : '✓'}</span>Pedido enviado</li>
+    <li class="step ${status === 'baixando' ? 'now' : status ? 'done' : ''}"><span class="ic">${status === 'baixando' ? '•' : status ? '✓' : '•'}</span>Baixando</li>
+    <li class="step ${status === 'sucesso - reiniciando' ? 'done' : status.startsWith('erro') ? 'fail' : ''}"><span class="ic">${status === 'sucesso - reiniciando' ? '✓' : status.startsWith('erro') ? '✕' : '•'}</span>Instalado</li>
+  `;
+}
+$('#form-ota')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const url = $('#ota-url').value.trim();
+  if (!/^https?:\/\//.test(url)) { fb($('#fb-ota'), 'error', 'Cole um link http(s) válido.'); return; }
+  const ok = await confirmar('Enviar atualização?', 'A máquina baixa, instala e reinicia. Mantenha-a ligada.', 'Enviar');
+  if (!ok) return;
+  try {
+    await db.ref(RAIZ + '/developer').update({ firmware_url: url, atualizar: true, status: 'pedido_enviado' });
+    fb($('#fb-ota'), 'ok', 'Pedido enviado.');
+    $('#ota-url').value = '';
+    setTimeout(() => fb($('#fb-ota'), '', ''), 2500);
+  } catch (err) { fb($('#fb-ota'), 'error', msgErro(err)); }
+});
+$('#ota-cancel')?.addEventListener('click', async () => {
+  try { await db.ref(RAIZ + '/developer').update({ atualizar: false }); toast('Pedido cancelado.', 'success'); }
+  catch (err) { toast(msgErro(err), 'error'); }
+});
+
+// ================= RELATÓRIOS =================
+function preencherHoras() {
+  const h1 = $('#rel-h1'), h2 = $('#rel-h2');
+  if (!h1 || !h2) return;
+  for (let i = 0; i < 24; i++) {
+    const v = String(i).padStart(2, '0');
+    h1.insertAdjacentHTML('beforeend', `<option value="${v}">${v}:00</option>`);
+    h2.insertAdjacentHTML('beforeend', `<option value="${v}">${v}:59</option>`);
+  }
+  h1.value = '00'; h2.value = '23';
+}
+
+function calcularPeriodo() {
+  const p = $('#rel-periodo').value;
+  const agora = new Date();
+  const TZoff = -3 * 3600 * 1000;
+  const iniLocal = (y, m, d) => new Date(Date.UTC(y, m, d, 3, 0, 0));
+  const fimLocal = (y, m, d) => new Date(Date.UTC(y, m, d, 2, 59, 59)).getTime() + 86400000;
+  if (p === 'custom') {
+    const de = $('#rel-de').value ? new Date($('#rel-de').value).getTime() / 1000 : 0;
+    const ate = $('#rel-ate').value ? new Date($('#rel-ate').value).getTime() / 1000 : agoraSec();
+    return { de, ate };
+  }
+  if (p === 'hoje') { const y = agora.getUTCFullYear(), m = agora.getUTCMonth(), d = agora.getUTCDate(); return { de: Math.floor(iniLocal(y,m,d).getTime()/1000), ate: Math.floor(fimLocal(y,m,d)/1000) }; }
+  if (p === 'ontem') { const dt = new Date(Date.now() - 864e5); const y = dt.getUTCFullYear(), m = dt.getUTCMonth(), d = dt.getUTCDate(); return { de: Math.floor(iniLocal(y,m,d).getTime()/1000), ate: Math.floor(fimLocal(y,m,d)/1000) }; }
+  if (/^\d+$/.test(p)) { const dias = Number(p); return { de: agoraSec() - dias * 86400, ate: agoraSec() }; }
+  if (p === 'mes') { const y = agora.getUTCFullYear(), m = agora.getUTCMonth(); return { de: Math.floor(iniLocal(y,m,1).getTime()/1000), ate: agoraSec() }; }
+  if (p === 'mespassado') { const y = agora.getUTCFullYear(), m = agora.getUTCMonth() - 1; const ini = new Date(Date.UTC(y, m, 1)); const fim = new Date(Date.UTC(y, m + 1, 1)); return { de: Math.floor(ini.getTime()/1000) - 10800, ate: Math.floor(fim.getTime()/1000) - 10800 - 1 }; }
+  if (p === 'ano') { const y = agora.getUTCFullYear(); return { de: Math.floor(iniLocal(y,0,1).getTime()/1000), ate: agoraSec() }; }
+  if (p === 'anopassado') { const y = agora.getUTCFullYear() - 1; const ini = new Date(Date.UTC(y,0,1)); const fim = new Date(Date.UTC(y+1,0,1)); return { de: Math.floor(ini.getTime()/1000)-10800, ate: Math.floor(fim.getTime()/1000)-10800-1 }; }
+  return { de: agoraSec() - 30*86400, ate: agoraSec() };
+}
+
+$('#btn-gerar')?.addEventListener('click', async () => {
+  const { de, ate } = calcularPeriodo();
+  const sel = [...F.rel];
+  try {
+    fb($('#fb-rel'), 'pending', 'Gerando…');
+    const snap = await db.ref(RAIZ + '/transacoes').orderByChild('processado_em').startAt(de).endAt(ate).once('value');
+    const arr = [];
+    snap.forEach(c => {
+      const v = c.val(); if (!v) return;
+      const t = { ...v, id: v.id != null ? String(v.id) : c.key };
+      const st = t.status;
+      if (st === 'liberado' && isManual(t) && !$('#rel-manual').checked) return;
+      if (sel.size) {
+        const ok = [...sel].some(f => f === st ||
+          (f === 'aprovado' && st === 'liberado') ||
+          (f === 'estornado' && st === 'estornado') ||
+          (f === 'decisao' && (st === 'aguardando_autorizacao' || st === 'ignorado_fora_da_janela')) ||
+          (f === 'andamento' && (st === 'estorno_pendente' || st === 'estorno_falhou')) ||
+          (f === 'recusado' && st === 'estorno_recusado'));
+        if (!ok) return;
+      }
+      arr.push(t);
+    });
+    arr.sort((a, b) => quandoTx(b) - quandoTx(a));
+    relatorio = arr;
+    relMeta = { de, ate };
+    const bruto = arr.filter(t => t.status === 'liberado' && !isManual(t)).reduce((a, t) => a + valorTx(t), 0);
+    const estV = arr.filter(t => t.status === 'estornado').reduce((a, t) => a + (Number(t.valor_estornado || t.valor) || 0), 0);
+    const estN = arr.filter(t => t.status === 'estornado').length;
+    $('#r-qtd').textContent = String(arr.filter(t => !isManual(t)).length);
+    $('#r-bruto').textContent = brl(bruto);
+    $('#r-est').textContent = brl(estV);
+    $('#r-est-n').textContent = `${estN} estorno${estN === 1 ? '' : 's'}`;
+    $('#r-liq').textContent = brl(bruto - estV);
+    $('#rel-periodo-txt').textContent = `${fmtData(de)} até ${fmtData(ate)}`;
+    $('#rel-head').innerHTML = '<tr><th>Data</th><th>ID</th><th>Status</th><th>Motivo</th><th class="num">Valor</th></tr>';
+    $('#rel-body').innerHTML = arr.slice(0, 300).map(t => `<tr>
+      <td>${fmtCurta(quandoTx(t))}</td>
+      <td class="mono">${esc(t.id)}</td>
+      <td>${esc(statusInfo(t).l)}</td>
+      <td>${esc(MOTIVO[motivoTx(t)] || motivoTx(t) || '—')}</td>
+      <td class="num">${isManual(t) ? '—' : brl(t.valor)}</td>
+    </tr>`).join('');
+    $('#rel-nota').textContent = arr.length > 300 ? `Mostrando 300 de ${arr.length}. Exporte o CSV para ver tudo.` : `${arr.length} registros.`;
+    $('#rel-res').hidden = false;
+    fb($('#fb-rel'), 'ok', 'Relatório gerado.');
+  } catch (err) { fb($('#fb-rel'), 'error', msgErro(err)); }
+});
+
+$$('#rel-status .chip').forEach(ch => ch.addEventListener('click', () => {
+  ch.classList.toggle('active');
+  ch.classList.contains('active') ? F.rel.add(ch.dataset.v) : F.rel.delete(ch.dataset.v);
+}));
+
+function baixar(nome, tipo, conteudo) {
+  const blob = new Blob([conteudo], { type: tipo });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = nome;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+$('#exp-csv')?.addEventListener('click', () => {
+  if (!relatorio.length) return;
+  const linhas = [['Data','ID','Status','Motivo','Valor','Estornado']];
+  for (const t of relatorio) linhas.push([
+    fmtData(quandoTx(t)), t.id, statusInfo(t).l, MOTIVO[motivoTx(t)] || motivoTx(t) || '',
+    isManual(t) ? '0' : String(valorTx(t)).replace('.', ','),
+    String(Number(t.valor_estornado || 0)).replace('.', ',')
+  ]);
+  baixar(`relatorio_${Date.now()}.csv`, 'text/csv;charset=utf-8', linhas.map(l => l.map(c => `"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n'));
+});
+$('#exp-xlsx')?.addEventListener('click', () => {
+  if (!relatorio.length) return;
+  const linhas = [['Data','ID','Status','Motivo','Valor','Estornado']];
+  for (const t of relatorio) linhas.push([fmtData(quandoTx(t)), t.id, statusInfo(t).l, MOTIVO[motivoTx(t)] || motivoTx(t) || '', isManual(t) ? 0 : valorTx(t), Number(t.valor_estornado || 0)]);
+  const html = `<table>${linhas.map(l => '<tr>' + l.map(c => `<td>${esc(c)}</td>`).join('') + '</tr>').join('')}</table>`;
+  baixar(`relatorio_${Date.now()}.xls`, 'application/vnd.ms-excel', html);
+});
+$('#exp-pdf')?.addEventListener('click', () => {
+  if (!relatorio.length) return;
+  const w = window.open('', '_blank');
+  w.document.write(`<html><head><title>Relatório</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ccc;padding:6px;text-align:left}th{background:#eee}</style></head><body>
+    <h2>Relatório — Bomba Denisio</h2>
+    <p>${fmtData(relMeta.de)} até ${fmtData(relMeta.ate)}</p>
+    <table><thead><tr><th>Data</th><th>ID</th><th>Status</th><th>Motivo</th><th>Valor</th></tr></thead><tbody>
+    ${relatorio.map(t => `<tr><td>${fmtData(quandoTx(t))}</td><td>${esc(t.id)}</td><td>${esc(statusInfo(t).l)}</td><td>${esc(MOTIVO[motivoTx(t)]||'')}</td><td>${isManual(t)?'—':brl(t.valor)}</td></tr>`).join('')}
+    </tbody></table></body></html>`);
+  w.document.close();
+  w.print();
+});
+
+// ================= AÇÕES EM LINHAS =================
+document.addEventListener('click', async e => {
+  const txEl = e.target.closest('[data-tx]');
+  if (txEl && !e.target.closest('[data-acao]')) { txEl.classList.toggle('open'); return; }
+  const logEl = e.target.closest('[data-log]');
+  if (logEl) { logEl.classList.toggle('open'); return; }
+
+  const btn = e.target.closest('[data-acao]');
+  if (!btn) return;
+  e.stopPropagation();
+  const id = btn.dataset.id, acao = btn.dataset.acao;
+  if (acao === 'autorizar') {
+    const ok = await pedirSenha('Autorizar estorno?', `O valor de ${id} será devolvido ao cliente.`, 'Autorizar');
+    if (!ok) return;
+    try {
+      await db.ref(RAIZ + '/fila_estornos/' + id).update({ motivo: 'autorizado_usuario', tentativas: 0, proxima_tentativa: 0 });
+      await db.ref(RAIZ + '/transacoes/' + id).update({
+        status: 'estorno_pendente', motivo_estorno: 'autorizado_usuario',
+        autorizado_por: auth.currentUser?.email || 'painel', autorizado_em: agoraSec()
+      });
+      toast('Estorno autorizado.', 'success');
+    } catch (err) { toast(msgErro(err), 'error'); }
+  }
+  if (acao === 'recusar') {
+    const ok = await confirmar('Recusar estorno?', 'O PIX será marcado como recusado e não será devolvido.', 'Recusar', true);
+    if (!ok) return;
+    try {
+      await db.ref(RAIZ + '/transacoes/' + id).update({
+        status: 'estorno_recusado', recusado_por: auth.currentUser?.email || 'painel', recusado_em: agoraSec()
+      });
+      await db.ref(RAIZ + '/fila_estornos/' + id).remove();
+      toast('Estorno recusado.', 'success');
+    } catch (err) { toast(msgErro(err), 'error'); }
+  }
+  if (acao === 'repetir') {
+    try {
+      await db.ref(RAIZ + '/transacoes/' + id).update({ status: 'estorno_pendente', tentativas: 0 });
+      await db.ref(RAIZ + '/fila_estornos/' + id).update({ motivo: 'autorizado_usuario', tentativas: 0, proxima_tentativa: 0 });
+      toast('Tentativa reiniciada.', 'success');
+    } catch (err) { toast(msgErro(err), 'error'); }
+  }
+});
+
+// ================= NAVEGAÇÃO =================
+const TITULOS = {
+  geral:'Visão Geral', bomba:'Controle da Bomba', multigarrafao:'Multi-garrafão',
+  transacoes:'Transações', estornos:'Estornos',
+  relatorios:'Relatórios', conexao:'Conexão', logsesp:'Logs ESP', logsapi:'Logs API',
+  config:'Configurações', ota:'Atualização OTA'
+};
+function irPara(pagina) {
+  $$('.page').forEach(p => p.hidden = p.id !== 'p-' + pagina);
+  $$('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === pagina));
+  $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.page === pagina));
+  $('#page-title').textContent = TITULOS[pagina] || 'Painel';
+  document.body.classList.remove('menu-open');
+  $('#sheet').hidden = true;
+  document.body.classList.remove('sheet-open');
+  window.scrollTo(0, 0);
+}
+$$('.nav-item, .tab').forEach(b => b.dataset.page && b.addEventListener('click', () => irPara(b.dataset.page)));
+$$('[data-go]').forEach(b => b.addEventListener('click', () => irPara(b.dataset.go)));
+$$('.sheet-item').forEach(b => b.dataset.page && b.addEventListener('click', () => irPara(b.dataset.page)));
+
+$('#menu-btn')?.addEventListener('click', () => document.body.classList.add('menu-open'));
+$('#close-btn')?.addEventListener('click', () => document.body.classList.remove('menu-open'));
+$('#overlay')?.addEventListener('click', () => document.body.classList.remove('menu-open'));
+$('#tab-mais')?.addEventListener('click', () => { $('#sheet').hidden = false; document.body.classList.add('sheet-open'); });
+$('#sheet')?.addEventListener('click', e => { if (e.target.dataset.fecharSheet !== undefined || e.target.classList.contains('sheet-bg')) { $('#sheet').hidden = true; document.body.classList.remove('sheet-open'); } });
+$('#sheet-sair')?.addEventListener('click', () => auth.signOut());
+
+// ================= FILTROS =================
+$('#tx-busca')?.addEventListener('input', e => { F.busca = e.target.value; renderTx(); });
+$('#tx-status')?.addEventListener('change', e => { F.status = e.target.value; renderTx(); });
+$('#tx-motivo')?.addEventListener('change', e => { F.motivo = e.target.value; renderTx(); });
+$$('[data-filter]').forEach(grupo => {
+  const alvo = grupo.dataset.filter;
+  grupo.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', () => {
+    grupo.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+    ch.classList.add('active');
+    if (alvo === 'esp') { F.esp = ch.dataset.v; renderLogsEsp(); }
+    if (alvo === 'api') { F.api = ch.dataset.v; renderLogsApi(); }
+    if (alvo === 'hist') { F.hist = ch.dataset.v; renderEstornos(); }
+  }));
+});
+
+// ================= OLHO =================
+$('#btn-olho')?.addEventListener('click', () => {
+  ocultar = !ocultar; lsSet('va_ocultar', ocultar ? '1' : '0');
+  renderDinheiro(); renderResumoGeral();
+});
+
+// ================= NOTIFICAÇÕES (popover) =================
+$('#bell')?.addEventListener('click', () => {
+  const np = $('#np'); np.hidden = !np.hidden;
+});
+$('#np-ler')?.addEventListener('click', () => { notifSessao.forEach(n => n.lida = true); renderNotificacoes(); });
+$('#np-alertas')?.addEventListener('click', async () => {
+  if (!('Notification' in window)) return toast('Navegador não suporta notificações.', 'error');
+  const p = await Notification.requestPermission();
+  if (p === 'granted') { toast('Alertas ativados.', 'success'); new Notification('Painel Denisio', { body: 'Notificações ativadas!' }); }
+  else toast('Permissão recusada.', 'error');
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('#np') && !e.target.closest('#bell')) $('#np').hidden = true;
+});
+
+// ================= LOGIN =================
+$('#ver-senha')?.addEventListener('click', () => {
+  const inp = $('#senha');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  $('#ver-senha').textContent = inp.type === 'password' ? 'Mostrar' : 'Ocultar';
+});
+
+auth.onAuthStateChanged(user => {
+  $('#boot').hidden = true;
+  if (user) {
+    $('#login').hidden = true;
+    $('#app').hidden = false;
+    $('#user-email').textContent = user.email;
+    $('#sheet-email').textContent = user.email;
+    const ini = (user.email || '?')[0].toUpperCase();
+    $('#user-ini').textContent = ini;
+    $('#sheet-ini').textContent = ini;
+    iniciarDados();
+    irPara('geral');
+  } else {
+    $('#app').hidden = true;
+    $('#login').hidden = false;
+    pararDados();
+  }
+});
+
+$('#login-form')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = $('#email').value.trim();
+  const senha = $('#senha').value;
+  const btn = $('#login-btn'), erro = $('#login-erro');
+  btn.disabled = true; btn.textContent = 'Entrando…'; erro.hidden = true;
+  try {
+    const persist = $('#lembrar').checked
+      ? firebase.auth.Auth.Persistence.LOCAL
+      : firebase.auth.Auth.Persistence.SESSION;
+    await auth.setPersistence(persist);
+    await auth.signInWithEmailAndPassword(email, senha);
+  } catch (err) {
+    erro.textContent = /invalid-email|wrong-password|invalid-credential/i.test(err.code || '') ? 'E-mail ou senha incorretos.' :
+                       /too-many/.test(err.code || '') ? 'Muitas tentativas. Aguarde.' :
+                       /network/.test(err.code || '') ? 'Sem conexão.' : msgErro(err);
+    erro.hidden = false;
+  } finally { btn.disabled = false; btn.textContent = 'Entrar'; }
+});
+
+$('#logout')?.addEventListener('click', () => auth.signOut());
+$('#sheet-sair')?.addEventListener('click', () => auth.signOut());
+
+// Relógio
+tickTimer = setInterval(() => {
+  if (!$('#app').hidden) { renderStatus(); renderConexao(); }
+}, 1000);
+
+// ================= MULTI-GARRAFÃO =================
+(function multiGarrafao() {
+  const $mg = id => document.getElementById(id);
+  let mgSyncTimer = null;
+
+  function renderMG() {
+    const s = S.status || {};
+    const c = S.config || {};
+
+    const total = Number(s.doses_total) || 0;
+    const atual = Number(s.dose_atual) || 0;
+    const completos = Number(s.doses_completas) || 0;
+    const pendentes = Number(s.doses_pendentes) || 0;
+    const aberto = !!s.cronometro_aberto;
+    const bombaOn = !!s.bomba_ativa;
+    const pedidoId = s.pedido_atual || '';
+
+    const orb = $mg('mg-orb');
+    if (orb) orb.classList.toggle('on', bombaOn);
+
+    if ($mg('mg-orb-main')) $mg('mg-orb-main').textContent = total ? `${completos}/${total}` : '—';
+    if ($mg('mg-orb-sub')) $mg('mg-orb-sub').textContent = bombaOn
+      ? `Saindo garrafão ${atual}…`
+      : (total ? (pendentes ? 'Aguardando próximo' : 'Concluído') : 'Sem pedido');
+
+    if ($mg('mg-pedido-id')) $mg('mg-pedido-id').textContent = pedidoId ? `#${pedidoId}` : 'Nenhum pedido em andamento';
+    if ($mg('mg-total')) $mg('mg-total').textContent = total || '—';
+    if ($mg('mg-completos')) $mg('mg-completos').textContent = completos;
+    if ($mg('mg-pendentes')) $mg('mg-pendentes').textContent = pendentes;
+    if ($mg('mg-cron')) $mg('mg-cron').textContent = aberto ? 'Rodando' : '—';
+
+    const prox = Number(s.proxima_dose_em) || 0;
+    if ($mg('mg-proxima')) {
+      if (total && pendentes && prox) {
+        const falta = Math.max(0, prox - agoraSec());
+        $mg('mg-proxima').textContent = falta
+          ? `Próximo garrafão em ${falta} s (intervalo: ${c.intervalo_doses_seg ?? '?'} s).`
+          : 'Liberando próximo garrafão…';
+      } else if (total && !pendentes) {
+        $mg('mg-proxima').textContent = 'Todos os garrafões pagos já saíram.';
+      } else {
+        $mg('mg-proxima').textContent = '—';
+      }
+    }
+
+    if ($mg('mg-cancelar')) $mg('mg-cancelar').hidden = !total;
+    if ($mg('mg-nota')) $mg('mg-nota').textContent = total
+      ? `Pedido #${pedidoId} em andamento — cancelar para os ${pendentes} restantes.`
+      : 'Sem pedido em andamento no momento.';
+
+    const banner = $mg('mg-banner');
+    const ativo = c.multi_garrafao !== false;
+    if (banner) {
+      banner.hidden = ativo;
+      if (!ativo && $mg('mg-banner-txt')) $mg('mg-banner-txt').textContent = 'Multi-garrafão está DESATIVADO. PIX com valor múltiplo será tratado como valor incorreto.';
+    }
+
+    if (!mgSyncTimer) {
+      if ($mg('mg-ativo')) $mg('mg-ativo').checked = ativo;
+      if ($mg('mg-max')) $mg('mg-max').value = c.max_garrafoes ?? 10;
+      if ($mg('mg-max-range')) $mg('mg-max-range').value = c.max_garrafoes ?? 10;
+      if ($mg('mg-intervalo')) $mg('mg-intervalo').value = c.intervalo_doses_seg ?? 25;
+      if ($mg('mg-intervalo-range')) $mg('mg-intervalo-range').value = c.intervalo_doses_seg ?? 25;
+    }
+
+    const max = c.max_garrafoes ?? 10;
+    const intv = c.intervalo_doses_seg ?? 25;
+    const vl = Number(c.valor) || 0;
+    if ($mg('mg-r1')) $mg('mg-r1').textContent = `🧴 Valor unitário: R$ ${vl.toFixed(2).replace('.', ',')} × até ${max} = R$ ${(vl * max).toFixed(2).replace('.', ',')}.`;
+    if ($mg('mg-r2')) $mg('mg-r2').textContent = `⏱️ Pausa de ${intv} s entre garrafões (para encher/trocar).`;
+    if ($mg('mg-r3')) $mg('mg-r3').textContent = ativo
+      ? '✅ PIX com valor múltiplo do unitário é aceito automaticamente.'
+      : '🚫 Multi desativado: só aceita exatamente 1 garrafão por PIX.';
+  }
+
+  async function salvarMG() {
+    const btn = $mg('mg-salvar');
+    const fbEl = $mg('mg-fb');
+    btn.disabled = true;
+    try {
+      await db.ref(RAIZ + '/config').update({
+        multi_garrafao: $mg('mg-ativo').checked,
+        max_garrafoes: Math.max(1, Math.min(50, Number($mg('mg-max').value) || 10)),
+        intervalo_doses_seg: Math.max(5, Math.min(300, Number($mg('mg-intervalo').value) || 25)),
+      });
+      fb(fbEl, 'ok', 'Salvo. Aplicando no firmware em até 5 s…');
+      setTimeout(() => fb(fbEl, '', ''), 3000);
+    } catch (err) {
+      fb(fbEl, 'error', msgErro(err));
+    } finally {
+      btn.disabled = false;
+      mgSyncTimer = null;
+    }
+  }
+
+  async function cancelarMG() {
+    if (!(await confirmar('Cancelar pedido atual?', 'Os garrafões restantes não serão liberados.', 'Cancelar pedido', true))) return;
+    try {
+      await db.ref(RAIZ + '/comandos').update({ cancelar_fila: true });
+      toast('Pedido de cancelamento enviado.', 'success');
+    } catch (err) {
+      toast(msgErro(err), 'error');
+    }
+  }
+
+  function bindMG() {
+    $mg('mg-salvar')?.addEventListener('click', salvarMG);
+    $mg('mg-cancelar')?.addEventListener('click', cancelarMG);
+    $mg('mg-ativo')?.addEventListener('change', () => { mgSyncTimer = setTimeout(() => mgSyncTimer = null, 800); });
+
+    const bindRange = (numId, rngId) => {
+      const n = $mg(numId), r = $mg(rngId);
+      if (!n || !r) return;
+      r.addEventListener('input', () => { mgSyncTimer = 1; n.value = r.value; });
+      n.addEventListener('input', () => {
+        mgSyncTimer = 1;
+        const v = Math.max(Number(n.min)||1, Math.min(Number(n.max)||100, Number(n.value)||0));
+        r.value = v;
+      });
+    };
+    bindRange('mg-max', 'mg-max-range');
+    bindRange('mg-intervalo', 'mg-intervalo-range');
+  }
+
+  function renderMGHistorico() {
+    const el = $mg('mg-historico');
+    if (!el) return;
+    const multi = (S.tx || []).filter(t => (Number(t.garrafoes) || 1) > 1);
+    if (!multi.length) { el.innerHTML = '<li class="empty">Nenhum pedido multi-garrafão ainda.</li>'; return; }
+    el.innerHTML = multi.slice(0, 20).map(t => `
+      <li class="row">
+        <span class="ic-circle primary">🧴</span>
+        <div class="row-main">
+          <div class="row-title">${esc(t.garrafoes)} garrafões · ${fmtCurta(quandoTx(t))}</div>
+          <div class="row-meta">#${esc(t.id)} · ${esc(statusInfo(t).l)}</div>
+        </div>
+        <div class="row-end">
+          <span class="row-val pos">${brl(t.valor)}</span>
+          <span class="badge ${statusInfo(t).c}">${esc(statusInfo(t).l)}</span>
+        </div>
+      </li>
+    `).join('');
+  }
+
+  window.__mgUpdate = function () {
+    if (!document.getElementById('p-multigarrafao')) return;
+    renderMG();
+    renderMGHistorico();
+  };
+
+  document.addEventListener('DOMContentLoaded', bindMG);
+  if (document.readyState !== 'loading') bindMG();
+})();
+
+// Hook extra: renderTxTudo original (o renderStatus já chama __mgUpdate)
+const __renderTxTudoAntes = window.renderTxTudo;
+window.renderTxTudo = function () {
+  if (typeof __renderTxTudoAntes === 'function') __renderTxTudoAntes();
+  if (typeof window.__mgUpdate === 'function') window.__mgUpdate();
+};
+
+// Preenche horas do relatório
+preencherHoras();
+</script>
+</body>
+</html>
